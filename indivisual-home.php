@@ -6,7 +6,7 @@
     <link rel="icon" href="img_news_00.jpg" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
-    <title>ホーム</title>
+    <title>ホーム -観劇感想日記</title>
 </meta>
 </head>
      
@@ -28,38 +28,50 @@
     // .envを使用する
     Dotenv\Dotenv::createImmutable(__DIR__)->load();
     // .envファイルで定義したHOST等を変数に代入
-    $HOST = $_ENV["HOST"];
+    $DSN = $_ENV["DSN"];
     $USER = $_ENV["USER"];
     $PASS = $_ENV["PASS"];
-    $DB = $_ENV["DB"];  
 
-    $mysqli = new mysqli($HOST, $USER, $PASS, $DB);
-    if($mysqli->connect_error){
-        echo $mysqli->connect_error;
-        exit();
-    } else {
-        $mysqli->set_charset("utf8mb4");
-    }
-         
-    // 成功・エラーメッセージの初期化
     $errors = array();
 
-    $userid = isset($_SESSION['id']) ? $_SESSION['id'] : NULL;
+    // DB接続設定
+    try {
+        $pdo = new PDO($DSN, $USER, $PASS, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
+    } catch (PDOException $e) {
+        $errors['DB_error'] = '接続失敗';
+        exit();
+    }
+
+    $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL;
     $performance = [];
-    $count_results = 0;
+    $id = [];
+    $count_results = 0; // useridが投稿した公演数
+
+    if(isset($_SESSION['performance_id'])){
+        unset($_SESSION['performance_id']);
+    }
+
+    if(isset($_POST['return_home_index'])){
+        $_SESSION = array();
+        $_SESSION['userid'] = $userid;
+        $_SESSION['token'] = $token;
+    }
          
     try{
-        $stmt_home = $mysqli -> prepare("SELECT id, performance FROM impression WHERE userid=?");
-        $stmt_home -> bind_param('i', $userid);
+        $stmt_home = $pdo -> prepare("SELECT id, performance FROM impression WHERE userid=:userid");
+        $stmt_home -> bindParam(':userid', $userid, PDO::PARAM_INT);
         $stmt_home -> execute();
-        $stmt_home->bind_result($id, $performance);    
-        // 値を取得します 
-        $stmt_home->fetch();
-
-        while($stmt_home -> fetch()){
-            if(isset($performance)){
-                $count_results++;
-                $performance[$count_results] = $row['performance'];
+        $results  = $stmt_home -> fetchAll();
+         
+        if(is_array($results)){
+            foreach($results as $row){
+                if(isset($row['performance'])){
+                    $count_results++;
+                    $id[$count_results] = $row['id'];
+                    $performance[$count_results] = h($row['performance']);
+                    $_SESSION['performances_id'][$count_results] = $row['id'];
+                    $_SESSION['performances_title'][$count_results] = h($row['performance']);
+                }
             }
         }
     }catch(PDOException $e){
@@ -85,7 +97,7 @@
             <form action="m6-indivisual-subject-show.php" method="post" name="<?php echo $performance[$i]; ?>">
                 <p><?php echo $i.":"; ?>
                 <a href="m6-indivisual-subject-show.php" onClick="<?php echo 'document.'.$performance[$i].'.submit();return false;' ?>"><?php echo $performance[$i]; ?></a></p>
-                <input type=hidden name="performance_name" value="<?php echo $performance[$i]; ?>">
+                <input type=hidden name='performance_id' value="<?php echo $id[$i]; ?>">
             </form>
         <?php } ?>
     <?php else :
@@ -96,6 +108,5 @@
         <p><a href = "m6-logout.php">ログアウトはこちら</a></p>
         <p><a href = "m6-withdrow.php">退会する</a></p>
     </form>
-</body>
-        
-</html>  
+</body>        
+</html>
