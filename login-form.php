@@ -7,7 +7,7 @@
     <link rel="icon" href="img_news_00.jpg" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
-    <title>ログイン画面</title>
+    <title>観劇感想日記</title>
  </head>
  
 <?php
