@@ -44,13 +44,15 @@
     
     $sucess = "";
     $flag = 0;
-    $drop_performance = "<option value=''>選択してください</option>";
+    
     $players_number = 0; // 入力されている出演者数
     $impression_players_number = 0; // 入力されている出演者の感想数
     $impression_scenes_number = 0; // 入力されている好き場面数
     $related_performances_number = 0; // 選択されている関連のある公演数
     $drop_select_impression_players = []; // 出演者の感想用の出演者のドロップダウンメニュー（既に出演者の感想で選択された出演者がいる場合）（確認時に使用）
-    $drop_impression_players = '<option value="">選択してください</option>';; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で三択された出演者がいない場合と新たに選択する用）（確認時に使用）
+    $drop_impression_players = '<option value="">選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
+    $drop_select_related_performances = []; // 関連のある公演用のドロップダウンメニュー
+    $drop_related_performances = "<option value=''>選択してください</option>"; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
 
     $userid= isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : NULL; 
     $performances_row = isset($_SESSION['performances_title']) ? $_SESSION['performances_title'] : NULL;
@@ -60,7 +62,7 @@
     if(isset($performances_row)){
         foreach($performances_row as $performances_row_key => $performance_row){
         // 新規追加用
-            $drop_performance .= "<option value=".h($performances_id_row[$performances_row_key]).">{$performance_row}</option>";
+            $drop_related_performances .= "<option value=".h($performances_id_row[$performances_row_key]).">{$performance_row}</option>";
         } 
     }
     
@@ -148,14 +150,28 @@
             }
         }
         $_SESSION['drop_select_impression_players'] = (isset($drop_select_impression_players) && $drop_select_impression_players[0] != '') ? $drop_select_impression_players : NULL;
+        if(isset($_SESSION['related_performances_id'])){
+            foreach($_SESSION['related_performances_id'] as $related_performance_id_key => $related_performance_id_value){
+                if(isset($related_performance_id_value)){
+                    $drop_select_related_performances[$related_performance_id_key] = "<option value=''>選択してください</option>";
+                    foreach($performances_row as $performances_row_key => $performance_row){
+                        if($related_performance_id_value == $performances_id_row[$performances_row_key]){
+                            $drop_select_related_performances[$related_performance_id_key] .= "<option value=".h($performances_id_row[$performances_row_key])." selected>{$performance_row}</option>";
+                        }else{
+                            $drop_select_related_performances[$related_performance_id_key] .= "<option value=".h($performances_id_row[$performances_row_key]).">{$performance_row}</option>";
+                        }
+                        
+                    } 
+                }
+            }            
+        }
+        $_SESSION['drop_select_related_performances'] = (isset($drop_select_related_performances) && $drop_select_related_performances[0] != '') ? $drop_select_related_performances : NULL;        
         $_SESSION['impression_final'] = (isset($_POST['impression_final']) && $_POST['impression_final'] != '') ? $_POST['impression_final'] : NULL;
         $_SESSION['players_number'] = $players_number;
         $_SESSION['impression_players_number'] = $impression_players_number;
         $_SESSION['impression_scenes_number'] = $impression_scenes_number;
         $_SESSION['related_performances_number'] = $related_performances_number;
-    }
-
-    
+    }    
 
     if(isset($_SESSION['players_number'])){
         $players_number = $_SESSION['players_number'];
@@ -169,7 +185,8 @@
     if(isset($_SESSION['related_performances_number'])){
         $related_performances_number = $_SESSION['related_performances_number'];
     }
-    $_SESSION['drop_impression_players'] = $drop_impression_players;
+    $_SESSION['drop_impression_players'] = $drop_impression_players; // 出演者の感想用ドロップダウンメニュー
+    $_SESSION['drop_related_performances'] = $drop_related_performances;
     $send_players_number = json_encode($players_number); // 出演者の最後のid番号
     $send_impression_players_number = json_encode($impression_players_number); // 出演者の感想の最後のid番号
     $send_impression_scenes_number = json_encode($impression_scenes_number); // 好きな場面の最後のid番号
@@ -491,10 +508,13 @@
             <div id='all_related_performances_area'>
                 <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
                     <p id='related_performance_area_<?php echo $i; ?>'>
-	   		            <select name='related_performances[]' id='related_performances_<?php echo $i; ?>' value="<?php if( !empty($_SESSION['related_performances_id'][$i]) ){ echo h($_SESSION['related_performances_id'][$i]); } ?>">
-                            <?php 
-                                echo $drop_performance; ?>
-                        </select><!-- ドロップダウンメニュー -->
+	   		            <select name='related_performances[]' id='related_performances_<?php echo $i; ?>'>
+                           <?php if(isset($_SESSION['drop_select_related_performances'])){
+                                        echo $_SESSION['drop_select_related_performances'][$i];
+                                    }else{
+                                        echo $_SESSION['drop_related_performances'];
+                                    } ?>
+                        </select>
                     </p>
                 <?php } ?>                
             </div>                        
