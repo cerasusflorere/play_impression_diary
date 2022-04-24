@@ -58,6 +58,8 @@
     $performances_row = isset($_SESSION['performances_title']) ? $_SESSION['performances_title'] : NULL;
     $performances_id_row = isset($_SESSION['performances_id']) ? $_SESSION['performances_id'] : NULL;
     $all_performances_number = count($performances_row);
+    $NULL = null; // 変数がない場合にNULLを送る
+    $send_NULL = json_encode($NULL);
 
     if(isset($performances_row)){
         foreach($performances_row as $performances_row_key => $performance_row){
@@ -103,6 +105,7 @@
                     $players_number--;
                 }
                 $drop_impression_players .= '<option value='.h($_SESSION['player'][$i]).'>'.h($_SESSION['player'][$i]).'</option>';
+                $send_players_name[] = $_SESSION['player'][$i];
             }
             $_SESSION['player_impression'][$i] = (isset($_POST['player_impression'][$i]) && $_POST['player_impression'][$i] != '') ? $_POST['player_impression'][$i] : NULL;
             if(isset($_SESSION['player_impression'][$i])){
@@ -135,6 +138,9 @@
                 }
             }
         }
+        if(isset($send_players_name)){
+            $_SESSION['send_players'] = json_encode($send_players_name); // 入力された名前を送る
+        }
         if(isset($_SESSION['player_impression'])){
             foreach($_SESSION['player_impression'] as $player_impression_key => $player_impression_name){
                 if(isset($player_impression_name)){
@@ -146,10 +152,14 @@
                             $drop_select_impression_players[$player_impression_key] .= '<option value='.h($player_name).'>'.h($player_name).'</option>';
                         }
                     }
+                    $send_impression_players_name[] = $player_impression_name;
                 }
             }
+            $_SESSION['drop_select_impression_players'] = $drop_select_impression_players;
+            if(isset($send_impression_players_name)){
+                $_SESSION['send_impression_players'] = json_encode($send_impression_players_name); // 選択された名前を送る
+            }            
         }
-        $_SESSION['drop_select_impression_players'] = (isset($drop_select_impression_players) && $drop_select_impression_players[0] != '') ? $drop_select_impression_players : NULL;
         if(isset($_SESSION['related_performances_id'])){
             foreach($_SESSION['related_performances_id'] as $related_performance_id_key => $related_performance_id_value){
                 if(isset($related_performance_id_value)){
@@ -163,9 +173,9 @@
                         
                     } 
                 }
-            }            
-        }
-        $_SESSION['drop_select_related_performances'] = (isset($drop_select_related_performances) && $drop_select_related_performances[0] != '') ? $drop_select_related_performances : NULL;        
+            }                      
+            $_SESSION['drop_select_related_performances'] = count($drop_select_related_performances) !== 0 ? $drop_select_related_performances : NULL;    
+        }      
         $_SESSION['impression_final'] = (isset($_POST['impression_final']) && $_POST['impression_final'] != '') ? $_POST['impression_final'] : NULL;
         $_SESSION['players_number'] = $players_number;
         $_SESSION['impression_players_number'] = $impression_players_number;
@@ -541,8 +551,8 @@
         let current_impression_scene_number = JSON.parse('<?php echo $send_impression_scenes_number; ?>'); // シーンごとの感想の最後のid番号
         let current_related_performance_number = JSON.parse('<?php echo $send_related_performances_number; ?>'); // 関連する舞台の最後のid番号
 
-        let option_players_name = []; // optionを構成
-        let select_players_name = []; // 選択された名前たち
+        let option_players_name = JSON.parse('<?php if(isset($_SESSION['send_players'])){ echo $_SESSION['send_players']; }else{ echo $send_NULL; } ?>') != null ? JSON.parse('<?php if(isset($_SESSION['send_players'])){ echo $_SESSION['send_players']; }else{ echo $send_NULL; } ?>') : []; // optionを構成
+        let select_players_name = JSON.parse('<?php if(isset($_SESSION['send_impression_players'])){ echo $_SESSION['send_impression_players']; }else{ echo $send_NULL; } ?>') != null ? JSON.parse('<?php if(isset($_SESSION['send_impression_players'])){ echo $_SESSION['send_impression_players']; }else{ echo $send_NULL; } ?>') : []; // 選択された名前たち
 
         // 入力された名前をプルダウンメニューに追加
         function checkPlayer() {
@@ -550,9 +560,6 @@
             const id_number = str.replace('player_', '');
             const player_id = 'player_'+ id_number;
             var inputPlayer = document.getElementById(player_id).value;
-            //let player_option_name = 'player_impression_option['+id_number+']';
-            //let option_player = document.getElementsByName(player_option_name);
-            //let option_players = [].slice.call(document.querySelectorAll('[name^="player_impression_option"]'));
             option_players_name[id_number] = inputPlayer;
             addOptionPlayers();
         }
@@ -614,27 +621,32 @@
         // 出演者に対する感想 追加
         // フォーム追加
         function addImpression_Player(){        
-            current_impression_player_number++; // id
-            const formerNumber = current_impression_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
-            // 要素をコピーする
-            let copied = all_impressions_player_area.firstElementChild.cloneNode(true);
-            copied.id = 'impression_area_' + current_impression_player_number; // コピーした要素のidを変更
-            // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-            all_impressions_player_area.appendChild(copied);
-            // 出演者のnameを取得する     
-            var copied_player_impression_names = document.getElementsByName('player_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 出演者のidを変更する
-            const new_player_impression_id = 'player_impression_' + current_impression_player_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-            copied_player_impression_names[(copied_player_impression_names.length)-1].id = new_player_impression_id; // 出演者のidを変更
-            copied_player_impression_names[(copied_player_impression_names.length)-1].value = '';
-            // 感想のnameを取得する     
-            var copied_impression_player_names = document.getElementsByName('impression_player[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 感想のidを変更する
-            const new_impression_player_id = 'impression_player_' + current_impression_player_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-            copied_impression_player_names[(copied_impression_player_names.length)-1].id = new_impression_player_id; // 出演者のidを変更
-            copied_impression_player_names[(copied_impression_player_names.length)-1].value = '';
-            // 関数checkPlayerを動作させる
-            select_players.push(document.querySelector('#'+ new_player_impression_id));
+            if(current_player_number > current_impression_player_number){
+                current_impression_player_number++; // id
+                const formerNumber = current_impression_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
+                // 要素をコピーする
+                let copied = all_impressions_player_area.firstElementChild.cloneNode(true);
+                copied.id = 'impression_area_' + current_impression_player_number; // コピーした要素のidを変更
+                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                all_impressions_player_area.appendChild(copied);
+                // 出演者のnameを取得する     
+                var copied_player_impression_names = document.getElementsByName('player_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                // 出演者のidを変更する
+                const new_player_impression_id = 'player_impression_' + current_impression_player_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
+                copied_player_impression_names[(copied_player_impression_names.length)-1].id = new_player_impression_id; // 出演者のidを変更
+                copied_player_impression_names[(copied_player_impression_names.length)-1].value = '';
+                // 感想のnameを取得する     
+                var copied_impression_player_names = document.getElementsByName('impression_player[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                // 感想のidを変更する
+                const new_impression_player_id = 'impression_player_' + current_impression_player_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
+                copied_impression_player_names[(copied_impression_player_names.length)-1].id = new_impression_player_id; // 出演者のidを変更
+                copied_impression_player_names[(copied_impression_player_names.length)-1].value = '';
+                // 関数checkPlayerを動作させる
+                select_players.push(document.querySelector('#'+ new_player_impression_id));
+            }else{
+                alert('出演者の数より多い感想は入力できません。');
+            }       
+        
         }
         // フォーム削除
         function dispImpression_Player(){
