@@ -52,12 +52,12 @@
     $drop_select_impression_players = []; // 出演者の感想用の出演者のドロップダウンメニュー（既に出演者の感想で選択された出演者がいる場合）（確認時に使用）
     $drop_impression_players = '<option hidden>選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
     $drop_select_related_performances = []; // 関連のある公演用のドロップダウンメニュー
-    $drop_related_performances = '<option hidden>選択してください</option>'; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
+    $drop_related_performances = '<option value="">選択してください</option>'; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
 
     $userid= isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : NULL; 
     $performances_row = isset($_SESSION['performances_title']) ? $_SESSION['performances_title'] : NULL;
     $performances_id_row = isset($_SESSION['performances_id']) ? $_SESSION['performances_id'] : NULL;
-    $all_performances_number = count($performances_row);
+    $send_all_performances_number = json_encode(count($performances_row));
     $NULL = null; // 変数がない場合にNULLを送る
     $send_NULL = json_encode($NULL);
 
@@ -550,6 +550,7 @@
         let current_impression_player_number = JSON.parse('<?php echo $send_impression_players_number; ?>'); // 出演者に関する感想の最後のid番号
         let current_impression_scene_number = JSON.parse('<?php echo $send_impression_scenes_number; ?>'); // シーンごとの感想の最後のid番号
         let current_related_performance_number = JSON.parse('<?php echo $send_related_performances_number; ?>'); // 関連する舞台の最後のid番号
+        const all_performances_number = JSON.parse('<?php echo $send_all_performances_number; ?>'); // 登録されている舞台の数
 
         let option_players_name = JSON.parse('<?php if(isset($_SESSION['send_players'])){ echo $_SESSION['send_players']; }else{ echo $send_NULL; } ?>') != null ? JSON.parse('<?php if(isset($_SESSION['send_players'])){ echo $_SESSION['send_players']; }else{ echo $send_NULL; } ?>') : []; // optionを構成
         let select_players_name = JSON.parse('<?php if(isset($_SESSION['send_impression_players'])){ echo $_SESSION['send_impression_players']; }else{ echo $send_NULL; } ?>') != null ? JSON.parse('<?php if(isset($_SESSION['send_impression_players'])){ echo $_SESSION['send_impression_players']; }else{ echo $send_NULL; } ?>') : []; // 選択された名前たち
@@ -695,20 +696,24 @@
 
         // 関連のある公演 追加
         // フォーム追加
-        function addRelated_Performance(){        
-            current_related_performance_number++; // id
-            const formerNumber = current_related_performance_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
-            // 要素をコピーする
-            let copied = all_related_performances_area.firstElementChild.cloneNode(true);
-            copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素のidを変更
-            // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-            all_related_performances_area.appendChild(copied);
-            // 出演者のnameを取得する     
-            var copied_related_performance_names = document.getElementsByName('related_performances[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 出演者のidを変更する
-            const new_related_performance_id = 'related_performances_' + current_related_performance_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-            copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
-            copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
+        function addRelated_Performance(){
+            if(current_related_performance_number + 1 < all_performances_number){
+                current_related_performance_number++; // id
+                const formerNumber = current_related_performance_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
+                // 要素をコピーする
+                let copied = all_related_performances_area.firstElementChild.cloneNode(true);
+                copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素のidを変更
+                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                all_related_performances_area.appendChild(copied);
+                // 出演者のnameを取得する     
+                var copied_related_performance_names = document.getElementsByName('related_performances[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                // 出演者のidを変更する
+                const new_related_performance_id = 'related_performances_' + current_related_performance_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
+                copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
+                copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
+            }else{
+                alert('登録されている舞台以外は選択できません。');
+            }                 
         }
         // フォーム削除
         function dispRelated_Performance(){
