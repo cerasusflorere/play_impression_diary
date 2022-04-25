@@ -1,0 +1,190 @@
+/* this file is loaded by index.html and styles the page */
+
+* {
+    box-sizing: border-box;
+  }
+  
+  * {
+    font-family: 'メイリオ' ,Meiryo, 'ヒラギノ角ゴ Pro W3' , 'Hiragino Kaku Gothic Pro' , 'ＭＳ Ｐゴシック' , 'Osaka' ,sans-serif;
+    color: #666666;
+  }
+  
+  html, body {
+    background-color: #FFF;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 3em;
+  }
+  /*
+  form {
+    background-color: #eee;
+    display: grid;
+    grid-gap: 1em;
+    padding: 1em;
+    max-width: 40ch;
+  }
+  input {
+    border: 1px solid silver;
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
+  }
+  form button {
+    background-color: #bbbbf2;
+    border: 2px solid currentColor;
+    border-radius: .25em;
+    cursor: pointer;
+    font-size: inherit;
+    line-height: 1.4em;
+    padding: 0.25em 1em;
+    max-width: 20ch;
+  }
+  form button:hover {
+    background-color: lavender;
+  }
+  */
+  
+  footer {
+    margin-top: 3em;
+    padding-top: 1.5em;
+    border-top: 1px solid lightgrey;
+  }
+
+/* ホーム画面 */
+.login-area {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.login-page {
+    display: flex;
+    width: 23em;
+    height: 32.5em;
+    position: relative;
+    box-shadow: 1.25em 2em 2.75em -0.6em rgb(0 0 0 / 20%), 0 0 2px rgb(0 0 0 / 15%);
+    border-radius: 0.5em;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: papayawhip;
+}
+.login-page:after {
+    content: '';
+    position: absolute; /* 親要素に重なるように */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* 👇白の透明度を調整したグラデーション */
+    background: linear-gradient(
+      -90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.1) 80%,
+      rgba(255, 255, 255, 0.4) 94%,
+      rgba(255, 255, 255, 0.5) 96%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+.login-err-area {
+  display: flex;
+  height: 3.5em;
+  position: absolute;
+  top: 3em;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.login-err {
+  margin: 0.2em;
+}
+.app-name-area {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.app-name {
+    width: 80%;
+}
+.login-form {
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    max-width: 22.5em;
+    padding: 1.5625em;
+    text-align: center;
+}
+.login-input-area {
+    display: flex;
+    height: 1em;
+    margin: 0.8em 0;
+    align-items: center;
+}
+.login-input-area-first {
+    margin-top: 0;
+}
+.login-input-area-second {
+    margin-bottom: 0.3em;
+}
+.login-input {
+    background-color: #ffbf7f;
+    border: 2px solid linen;
+    border-radius: 0.67em;
+}
+.icon {
+  color: #ffbf7f;
+}
+.login-button {
+  width: 4em;
+  padding: 0.8em 1em 0;
+  margin: auto;
+  background: papayawhip;
+  border: none;
+  font-size: 1.5em;
+  transition-duration: 0.2s;
+  cursor: pointer;
+}
+.login-other-area{
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.login-other {
+  text-decoration: none;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+/* 詳細 */
+/*ラジオボタンを全て消す*/
+input[name="edit_radio"] {
+  display: none;
+}
+#edit_datas {
+  display: none;
+}
+#edit:checked ~ #edit_datas {
+  display: block;
+}
+/*ラジオボタンを全て消す*/
+input[name="not_edit_radio"] {
+  display: none;
+}
+#not_edit_datas {
+  display: none;
+}
+#not_edit:checked ~ #not_edit_datas {
+  display: block;
+}
