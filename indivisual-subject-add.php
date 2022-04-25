@@ -50,9 +50,9 @@
     $impression_scenes_number = 0; // 入力されている好き場面数
     $related_performances_number = 0; // 選択されている関連のある公演数
     $drop_select_impression_players = []; // 出演者の感想用の出演者のドロップダウンメニュー（既に出演者の感想で選択された出演者がいる場合）（確認時に使用）
-    $drop_impression_players = '<option value="">選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
+    $drop_impression_players = '<option hidden>選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
     $drop_select_related_performances = []; // 関連のある公演用のドロップダウンメニュー
-    $drop_related_performances = "<option value=''>選択してください</option>"; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
+    $drop_related_performances = '<option hidden>選択してください</option>'; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
 
     $userid= isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : NULL; 
     $performances_row = isset($_SESSION['performances_title']) ? $_SESSION['performances_title'] : NULL;
