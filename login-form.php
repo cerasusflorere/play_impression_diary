@@ -83,35 +83,38 @@
 
 <body>
     <div class='login-area'>
-        <div class='login-page'>
-           <div class='login-err-area'>
-                <?php if(count($errors) > 0):?>
-                    <?php foreach($errors as $value){
-                        echo "<p class='login-err'>".$value."</p>";
-                    } ?>
-                <?php endif; ?>
-            </div>
+        <div class='login-book'>
+            <div class='login-page'>
+                <div class='login-err-area'>
+                    <?php if(count($errors) > 0):?>
+                        <?php foreach($errors as $value){
+                            echo "<p class='login-err'>".$value."</p>";
+                        } ?>
+                    <?php endif; ?>
+                </div>
 
-            <div class='app-name-area'>
-                <img src='app-name.png' class='app-name' alt=<?php echo '観劇感想日記' ?>>
-            </div>            
-                
-            <form action="" method="post" class='login-form'>
-                <p class='login-input-area login-input-area-first'>
-                    <i class="icon fas fa-user-circle fa-fw"></i><input type="text" name="username" class='login-input'>
-                </p>
-                <p class='login-input-area login-input-area-second'>
-                    <i class="icon fas fa-key fa-fw"></i><input type="password" name="password" class='login-input'>
-                </p>
-                <input type="submit" name="btn_login" value='<?php if(count($errors) == 0 && isset($_POST['btn_login'])){echo "&#xf3c1;";} else {echo "&#xf023;";} ?>' class='login-button icon fas'>
-            </form>
-            <div class='login-other-area'>
-                <a href="m6-pre-create.php" target="_blank" class='login-other'>初めての方はこちら</a><br>
-                <a href="m6-foget-username-form.php" class='login-other'>ユーザー名をお忘れの方はこちら</a><br>
-                <a href="m6-forget-password-form.php" class='login-other'>パスワードをお忘れの方はこちら</a>
+                <div class='app-name-area'>
+                    <img src='app-name.png' class='app-name' alt=<?php echo '観劇感想日記' ?>>
+                </div>            
+                  
+                <form action="" method="post" class='login-form'>
+                    <p class='login-input-area login-input-area-first'>
+                        <i class="icon fas fa-user-circle fa-fw"></i><input type="text" name="username" class='login-input'>
+                    </p>
+                    <p class='login-input-area login-input-area-second'>
+                        <i class="icon fas fa-key fa-fw"></i><input type="password" name="password" class='login-input'>
+                    </p>
+                    <input type="submit" name="btn_login" value='<?php if(count($errors) == 0 && isset($_POST['btn_login'])){echo "&#xf3c1;";} else {echo "&#xf023;";} ?>' class='login-button icon fas'>
+                </form>
+                <div class='login-other-area'>
+                    <a href="m6-pre-create.php" target="_blank" class='login-other'>初めての方はこちら</a><br>
+                    <a href="m6-forget-username-form.php" class='login-other'>ユーザー名をお忘れの方はこちら</a><br>
+                    <a href="m6-forget-password-form.php" class='login-other'>パスワードをお忘れの方はこちら</a>
+                </div>            
             </div>
-           
+            <div class='login-page-after'></div>
         </div>
+        <div class='login-bookshelf'></div>  
     </div>
 </body>
 </html>
