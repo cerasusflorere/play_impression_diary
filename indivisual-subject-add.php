@@ -480,8 +480,8 @@
             <input type="button" id="add_player" value='+' onclick="addPlayer()">
             <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
                     
-			<p>あらすじ：<textarea name="scenario" value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"></textarea></p>
-			<p>全体について思うこと：<textarea name="impression_all" value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"></textarea></p>
+			<p>あらすじ：<textarea name="scenario" value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea></p>
+			<p>全体について思うこと：<textarea name="impression_all" value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea></p>
 
             <p>出演者に対する感想</p>
             <div id='all_impressions_player_area'>
