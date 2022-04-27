@@ -8,6 +8,7 @@
     <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet">
     <title>仮登録 -観劇感想日記</title>
 </head>
+<body>
   
 <?php
     session_start();
@@ -350,9 +351,7 @@
          . "related_performance_10 INT"
          .");";
     $stmt_impression = $pdo->query($sql_impression);
-         
     
-         
     //エラーメッセージの初期化
     $errors = array();
          
@@ -374,8 +373,8 @@
                 $stmt = $pdo->prepare("SELECT id FROM user WHERE email=:email LIMIT 1");
                 $stmt->bindValue(':email', $email, PDO::PARAM_STR);
        
-                 $stmt->execute();
-                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
             }catch(PDOException $e){
                 //トランザクション取り消し
                 $pdo -> rollBack();
@@ -437,27 +436,47 @@
     }
 ?>
 
- <h1>ようこそ、新規登録をお願いします。</h1>
- <p>すでに登録済みの方は<a href="m6-login-form.php">こちら</a></p>
+<div class='pre-create-area'>
+    <table class='pre-create-label'>
+        <tr>
+            <th colspan='3' class='pre-create-label-th'>
+                <div class='pre-create-label-headding'>
+                    新規登録票<br>
+                    すでに登録済みの方は<a href="m6-login-form.php">こちら</a>
+                </div>                
+            </th>
+        </tr>
     
-     <!-- 登録完了画面 -->
-         <?php if(isset($_POST['submit']) && count($errors) === 0): ?>
-             <p><?=$message?></p>
-         <?php endif; ?>
+        <!-- 登録完了画面 -->
+        <?php if(isset($_POST['submit']) && count($errors) === 0): ?>
+            <tr>
+                <td><?=$message?></td>
+            </tr>
+        <?php endif; ?>
          
-     <!-- 登録画面 -->
-         <?php if(count($errors) > 0): ?>
-             <?php
-                 foreach($errors as $value){
-                 echo "<p class='error'>".$value."</p>";
-             }
-             ?>
-         <?php endif; ?>
-         <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
-             <p>メールアドレス：<input type="text" name="email" size="50" value="<?php if(!empty($_POST['email'])){echo $_POST['email'];} ?>"></p> 
-             <input type="hidden" name="token" value="<?=$token?>">
-             <input type="submit" name="submit" value="送信">
-         </form>
+        <!-- 登録画面 -->
+        <?php if(count($errors) > 0): ?>
+            <?php foreach($errors as $value){
+                echo "<p class='error'>".$value."</p>";
+            } ?>
+         
+        <?php else: ?>
+            <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
+                <tr>
+                    <td>メールアドレス：</td>
+                    <td>
+                        <input type="text" name="email" size="50" value="<?php if(!empty($_POST['email'])){echo $_POST['email'];} ?>">
+                        <input type="hidden" name="token" value="<?=$token?>">
+                    </td>
+                    <td>
+                        <input type="submit" name="submit" value="送信">
+                    </td>                   
+                </tr>               
+            </form>
+        <?php endif; ?>
+    </table>
+    
+</div>
 
 </body>
 </html>
