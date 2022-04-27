@@ -80,6 +80,7 @@
     );
 }
 .login-book {
+  z-index: 2;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -211,6 +212,68 @@
   text-decoration: none;
   font-size: 0.8em;
   cursor: pointer;
+}
+.login-bookshelf {
+  z-index: 0;
+  width: 100%;
+  height: 2.5em;
+  position: absolute;
+  background: 
+    repeating-radial-gradient( 
+      circle at -1000% 0%, 
+      rgba(116, 77, 48, 0.7), 
+      #573216 7.5%, 
+      rgba(116, 77, 48, 0.9) 10% ), 
+    repeating-radial-gradient( 
+      circle at 150% 0%, 
+      #573216, 
+      #573216 0.1%, 
+      #744d30 0.4%, 
+      #744d30 0.5% );
+}
+
+/* 初期登録 */
+.pre-create-area {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(208, 147, 82, 0.6),
+      rgba(192, 134, 70, 0.6) 60%,
+      rgba(208, 147, 82, 0.6)
+    ),
+    repeating-radial-gradient(
+      ellipse at 60% 500%,
+      #D9B690,
+      #D9B690 0.2%,
+      #E4C19E 0.6%,
+      #E4C19E 1%
+    );
+}
+/* 貸出票 */
+.pre-create-label {
+  background-color: #FCF3E1;
+}
+table, td, th{
+  border: 1px solid black;
+}
+.pre-create-label-th {
+  display: flex;
+  justify-content: center;
+  width: 290%;
+}
+.pre-create-label-headding {
+  background-image: linear-gradient(180deg, #663300 1px, transparent 1px); /* 罫線の色と太さ  */
+  background-size: 100% 2em; /* 行の高さ */
+  line-height: 2em; /* 文字の高さ */
+  padding-top: -1px;
+  padding-bottom: 1px; /* 最終行の下にも罫線を引く */
+  width: 15em;
 }
 
 /* 詳細 */
