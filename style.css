@@ -58,41 +58,82 @@
 
 /* ホーム画面 */
 .login-area {
-    display: flex;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(208, 147, 82, 0.6),
+      rgba(192, 134, 70, 0.6) 60%,
+      rgba(208, 147, 82, 0.6)
+    ),
+    repeating-radial-gradient(
+      ellipse at 60% 500%,
+      #D9B690,
+      #D9B690 0.2%,
+      #E4C19E 0.6%,
+      #E4C19E 1%
+    );
+}
+.login-book {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 .login-page {
-    display: flex;
-    width: 23em;
-    height: 32.5em;
-    position: relative;
-    box-shadow: 1.25em 2em 2.75em -0.6em rgb(0 0 0 / 20%), 0 0 2px rgb(0 0 0 / 15%);
-    border-radius: 0.5em;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: papayawhip;
+  z-index: 2;
+  display: flex;
+  width: 23em;
+  height: 32.5em;
+  position: relative;
+  box-shadow: 1.25em 2em 2.75em -0.6em rgb(0 0 0 / 20%), 0 0 2px rgb(0 0 0 / 15%);
+  border-radius: 0.5em;
+  border-bottom-left-radius: 0;
+  flex-direction: column;
+  justify-content: center;
+  background-color: papayawhip;
 }
-.login-page:after {
+.login-page:before {
+  z-index: 1;
+  content: '';
+  position: absolute; /* 親要素に重なるように */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* 👇白の透明度を調整したグラデーション */
+  background: linear-gradient(
+    -90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 80%,
+    rgba(255, 255, 255, 0.4) 94%,
+    rgba(255, 255, 255, 0.5) 96%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 1.5px 0 0 #ffd99e;
+  border-radius: 0.5em;
+  border-bottom-left-radius: 0;
+}
+.login-page-after {
+  z-index: 0;
+    position: absolute;
+    position: relative;
+    bottom: 1.45em;
+    left: 2px;
+    display: block;
+    box-sizing: border-box;
+    width: 22.75em;
+    /* left: auto; */
+    height: 2em;
     content: '';
-    position: absolute; /* 親要素に重なるように */
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    /* 👇白の透明度を調整したグラデーション */
-    background: linear-gradient(
-      -90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.1) 80%,
-      rgba(255, 255, 255, 0.4) 94%,
-      rgba(255, 255, 255, 0.5) 96%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    background-color: #afada3;
+    border-radius: 0.5em;
+    box-shadow: -2px 0 0 0 #ffd99e, 0 1.5px 1.5px 0 #ffd99e;
 }
 .login-err-area {
   display: flex;
@@ -141,12 +182,17 @@
     border: 2px solid linen;
     border-radius: 0.67em;
 }
+.login-input:focus {
+  outline: solid 1.5px #ffbf7f;
+}
 .icon {
   color: #ffbf7f;
 }
 .login-button {
+  position: relative;
+  top: 0.1em;
   width: 4em;
-  padding: 0.8em 1em 0;
+  padding: 0.7em 1em 0;
   margin: auto;
   background: papayawhip;
   border: none;
