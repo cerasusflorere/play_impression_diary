@@ -56,6 +56,7 @@
     $drop_performance_non = '<option value="">選択してください</option>'; // 関連のある公演追加時に使用
     $drop_performances_exist = []; // 関連のある公演に登録がある場合に使用
     $drop_performances_number = 0; // 関連のある公演が何公演登録されているか
+    
 
     $userid= isset($_SESSION['userid']) ? (int)$_SESSION['userid'] : NULL;         
     $performance_id = isset($_POST['performance_id']) ? $_POST['performance_id'] : NULL;
@@ -74,54 +75,54 @@
             $stmt_show -> execute();
             $results = $stmt_show -> fetch();
 
-            $row['performance'] = isset($results['performance']) ? $results['performance'] : NULL;
-            $row['theatrical_company'] = isset($results['theatrical_company']) ? $results['theatrical_company'] : NULL;
-            $row['date'] = isset($results['date']) ? $results['date'] : NULL;
-            $row['theater'] = isset($results['theater']) ? $results['theater'] : NULL;
-            $row['seat'] = isset($results['seat']) ? $results['seat'] : NULL;
-            $row['open_time'] = isset($results['open_time']) ? $results['open_time'] : NULL;
-            $row['close_time'] = isset($results['close_time']) ? $results['close_time'] : NULL;
-            $row['close_time'] = isset($results['close_time']) ? $results['close_time'] : NULL;
-            $row['first_date'] = isset($results['first_date']) ? $results['first_date'] : NULL;
-            $row['final_date'] = isset($results['final_date']) ? $results['final_date'] : NULL;
-            $row['organizer'] = isset($results['organizer']) ? $results['organizer'] : NULL;
-            $row['director'] = isset($results['director']) ? $results['director'] : NULL;
-            $row['author'] = isset($results['author']) ? $results['author'] : NULL;
-            $row['dance'] = isset($results['dance']) ? $results['dance'] : NULL;
-            $row['music'] = isset($results['music']) ? $results['music'] : NULL;
-            $row['lyrics'] = isset($results['lyrics']) ? $results['lyrics'] : NULL;
-            $row['costume'] = isset($results['costume']) ? $results['costume'] : NULL;
-            $row['illumination'] = isset($results['illumination']) ? $results['illumination'] : NULL;
-            $row['property'] = isset($results['property']) ? $results['property'] : NULL;
-            $row['scenario'] = isset($results['scenario']) ? $results['scenario'] : NULL;
-            $row['impression_all'] = isset($results['impression_all']) ? $results['impression_all'] : NULL;
+            $_SESSION['performance'] = isset($results['performance']) ? $results['performance'] : NULL;
+            $_SESSION['theatrical_company'] = isset($results['theatrical_company']) ? $results['theatrical_company'] : NULL;
+            $_SESSION['date'] = isset($results['date']) ? $results['date'] : NULL;
+            $_SESSION['theater'] = isset($results['theater']) ? $results['theater'] : NULL;
+            $_SESSION['seat'] = isset($results['seat']) ? $results['seat'] : NULL;
+            $_SESSION['open_time'] = isset($results['open_time']) ? $results['open_time'] : NULL;
+            $_SESSION['close_time'] = isset($results['close_time']) ? $results['close_time'] : NULL;
+            $_SESSION['close_time'] = isset($results['close_time']) ? $results['close_time'] : NULL;
+            $_SESSION['first_date'] = isset($results['first_date']) ? $results['first_date'] : NULL;
+            $_SESSION['final_date'] = isset($results['final_date']) ? $results['final_date'] : NULL;
+            $_SESSION['organizer'] = isset($results['organizer']) ? $results['organizer'] : NULL;
+            $_SESSION['director'] = isset($results['director']) ? $results['director'] : NULL;
+            $_SESSION['author'] = isset($results['author']) ? $results['author'] : NULL;
+            $_SESSION['dance'] = isset($results['dance']) ? $results['dance'] : NULL;
+            $_SESSION['music'] = isset($results['music']) ? $results['music'] : NULL;
+            $_SESSION['lyrics'] = isset($results['lyrics']) ? $results['lyrics'] : NULL;
+            $_SESSION['costume'] = isset($results['costume']) ? $results['costume'] : NULL;
+            $_SESSION['illumination'] = isset($results['illumination']) ? $results['illumination'] : NULL;
+            $_SESSION['property'] = isset($results['property']) ? $results['property'] : NULL;
+            $_SESSION['scenario'] = isset($results['scenario']) ? $results['scenario'] : NULL;
+            $_SESSION['impression_all'] = isset($results['impression_all']) ? $results['impression_all'] : NULL;
             for($i=1; $i < 51; $i++){
-                $row['player'][$i-1] = isset($results['player_'.$i]) ? $results['player_'.$i] : NULL;
-                $row['player_impression'][$i-1] = isset($results['player_impression_'.$i]) ? $results['player_impression_'.$i] : NULL;
+                $_SESSION['player'][$i-1] = isset($results['player_'.$i]) ? $results['player_'.$i] : NULL;
+                $_SESSION['player_impression'][$i-1] = isset($results['player_impression_'.$i]) ? $results['player_impression_'.$i] : NULL;
                 if(isset($row['player_impression'][$i-1])){
                     $drop_impression_players_number++;
                 }
-                $row['impression_player'][$i-1] = isset($results['impression_player_'.$i]) ? $results['impression_player_'.$i] : NULL;
-                $row['scene_impression'][$i-1] = isset($results['scene_impression_'.$i]) ? $results['scene_impression_'.$i] : NULL;
-                if(isset($row['scene_impression'][$i-1])){
+                $_SESSION['impression_player'][$i-1] = isset($results['impression_player_'.$i]) ? $results['impression_player_'.$i] : NULL;
+                $_SESSION['scene_impression'][$i-1] = isset($results['scene_impression_'.$i]) ? $results['scene_impression_'.$i] : NULL;
+                if(isset($_SESSION['scene_impression'][$i-1])){
                     $drop_scenes_number++;
                 }
-                $row['impression_scene'][$i-1] = isset($results['impression_scene_'.$i]) ? $results['impression_scene_'.$i] : NULL;
+                $_SESSION['impression_scene'][$i-1] = isset($results['impression_scene_'.$i]) ? $results['impression_scene_'.$i] : NULL;
                 if($i < 11){
-                    $row['related_performances_id'][$i-1] = isset($results['related_performance_'.$i]) ? $results['related_performance_'.$i] : NULL;
-                    if(isset($row['related_performances_id'][$i-1])){
+                    $_SESSION['related_performances_id'][$i-1] = isset($results['related_performance_'.$i]) ? $results['related_performance_'.$i] : NULL;
+                    if(isset($_SESSION['related_performances_id'][$i-1])){
                         $drop_performances_number++;
                     }
                 }
             }
-            $row['impression_final'] = isset($results['impression_final']) ? $results['impression_final'] : NULL;
+            $_SESSION['impression_final'] = isset($results['impression_final']) ? $results['impression_final'] : NULL;
 
             // 出演者の感想用ドロップダウンメニュー
             if($drop_impression_players_number>0){
                 // 出演者の感想がある場合
                 for($i=0; $i<$drop_impression_players_number; $i++){
                     $drop_players_exist[$i] = '';
-                    foreach($row['player'] as $player){
+                    foreach($_SESSION['player'] as $player){
                         if(isset($player)){
                             if($player == $row['player_impression'][$i]){
                                 $drop_players_exist[$i] .= "<option value=".h($player)." selected>".h($player)."</option>";
@@ -134,7 +135,7 @@
                     }
                 }
             }                        
-            foreach($row['player'] as $player){
+            foreach($_SESSION['player'] as $player){
                 // 新規追加用
                 if(isset($player)){
                     $drop_players_non .= "<option value=".h($player).">".h($player)."</option>";
@@ -142,7 +143,7 @@
                     break;
                 }                   
             }
-            $players_name = json_encode(array_filter($row['player'], 'myFilter'));
+            $players_name = json_encode(array_filter($_SESSION['player'], 'myFilter'));
             $impression_players_number = json_encode($drop_impression_players_number);
 
             $scenes_number = json_encode($drop_scenes_number);
@@ -153,8 +154,8 @@
                 for($i=0; $i<$drop_performances_number; $i++){
                     $drop_performances_exist[$i] = '';
                     foreach($performances_row as $performances_row_key => $performance_row){
-                        if($performances_id_row[$performances_row_key] == $row['related_performances_id'][$i]){
-                            $row['related_performances_title'][$i] = $performance_row;
+                        if($performances_id_row[$performances_row_key] == $_SESSION['related_performances_id'][$i]){
+                            $_SESSION['related_performances_title'][$i] = $performance_row;
                             $drop_performances_exist[$i] .= "<option value=".h($performances_id_row[$performances_row_key])." selected>".h($performance_row)."</option>";
                         }else{
                             $drop_performances_exist[$i] .= "<option value=".h($performances_id_row[$performances_row_key]).">{$performance_row}</option>";
@@ -162,10 +163,7 @@
                     }
                 }
             }
-            foreach($performances_row as $performances_row_key => $performance_row){
-                // 新規追加用
-                $drop_performance_non .= "<option value=".h($performances_id_row[$performances_row_key]).">{$performance_row}</option>";
-            }
+            
             $all_performances_number = json_encode($all_performances_number);
             $performances_number = json_encode($drop_performances_number);
 
