@@ -237,40 +237,142 @@
       #744d30 0.5% );
 }
 
+/*仮登録*/ /*ユーザー名通知*/ /*パスワードリセット*/
+/*注文票*/
+.pre-create-label {
+  background-color: #FFF;
+  padding: 1em;
+}
+.pre-create-label-headding-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 7em;
+  width: 29.9em;
+}
+.pre-create-label-headding {
+  display: flex;
+  border-bottom: solid 1px #000;
+  position: relative;
+  justify-content: center;
+}
+.pre-create-label-headding-main {
+  width: 7em;
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+}
+.pre-create-label-headding-message {
+  width: 14em;
+  position: relative;
+  top: 0.5em;
+}
+.pre-create-label-headding-name-date-right-area {
+  display: flex;
+  position: relative;
+  padding: 0.5em 0;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.pre-create-label-headding-name {
+  width: 5em;
+  font-size: 0.8em;
+}
+.pre-create-label-headding-date {
+  font-size: 0.8em;
+}
+.pre-create-label-headding-right {
+  width: 40%;  
+}
+.pre-create-app-name {
+  width: 100%;
+}
+.pre-create-label table {
+  border-collapse: collapse;
+}
+.pre-create-label tr {
+  height: 2.5em;
+}
+.pre-create-label td, th{
+  border: 1px solid #000;
+}
+.pre-create-label th:nth-of-type(1), .pre-create-label td:nth-of-type(1) {
+  width: 10em;
+}
+.pre-create-label th:nth-of-type(2), .pre-create-label td:nth-of-type(2) {
+  width: 15.6em;
+}
+.pre-create-label th:nth-of-type(3), .pre-create-label td:nth-of-type(3) {
+  width: 4em;
+  text-align: center;
+}
+.pre-create-label th {
+  border-bottom: 3px double #000; /* ヘッダ行の下線 */
+  color: #000;
+}
+.pre-create-label td {
+  padding: 0 5px; 
+}
+.pre-create-label td input { 
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+}
+.pre-create-label-text:focus {
+  border-bottom: 1px solid #000;
+  padding-bottom: 3px;
+}
+.pre-create-label-botton {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  justify-content: center;
+  color: #000;
+}
+.pre-create-label-footer {
+  display: flex;
+  height: 1em;
+  width: 100%;
+  align-items: center;
+}
+
 /*新規登録 */
 /* 貸出票 */
 .create-label {
   background-color: #FCF3E1;
 }
-table {
+.create-label table {
   border-collapse: collapse;
 }
-tr {
+.create-label tr {
   height: 2.5em;
 }
-td, th{
+.create-label td, th{
   border: 1px solid #663300;
 }
-th:nth-of-type(1), td:nth-of-type(1) {
+.create-label th:nth-of-type(1), .create-label td:nth-of-type(1) {
   border-left: none;
   width: 10em;
 }
-th:nth-of-type(2), td:nth-of-type(2) {
+.create-label th:nth-of-type(2), .create-label td:nth-of-type(2) {
   width: 15.6em;
 }
-th:nth-of-type(3), td:nth-of-type(3) {
+.create-label th:nth-of-type(3), .create-label td:nth-of-type(3) {
   border-right: none;
   width: 4em;
   text-align: center;
 }
-th {
+.create-label th {
   border-top: 3px double #663300; /* ヘッダ行の下線 */
   color: #663300;
 }
-td {
+.create-label td {
   padding: 0 5px; 
 }
-td input { 
+.create-label td input { 
   width: 100%;
   background-color: transparent;
   border: none;
@@ -346,6 +448,16 @@ td input {
   position: relative;
   width: 98%;
   font-size: 0.8em;
+}
+
+/* ユーザー名通知 */
+.username-notification-headding-main {
+  width: 12em;
+}
+
+/* パスワードリセット */
+.password-resets-headding-main {
+  width: 13.5em;
 }
 
 /* 詳細 */
