@@ -168,36 +168,167 @@
 ?>
     
 <body>
-    <h1>ようこそ、パスワードをリセットします。</h1>
-    <!-- page3 完了画面 -->
-    <?php if(isset($_POST['btn_submit']) && count($errors) === 0): ?>
-        パスワードをリセットできました。
-        <p>ログインは<a href="m6-login-form.php">こちら</a></p>
-    <!-- page2 確認画面 -->
-    <?php elseif(isset($_POST['btn_confirm']) && count($errors) === 0): ?>
-        <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>?urltoken=<?php print $urltoken; ?>" method="post">
-            <p>メールアドレス: <?=h($_SESSION['email'])?></p>
-            <p>パスワード: <?=h($password_hide)?></p>
-             
-            <input type="submit" name="btn_back" value="戻る">
-            <input type="hidden" name="token" value="<?=$_POST['token']?>">
-            <input type="submit" name="btn_submit" value="登録する">
-        </form>
-    <!-- page1 登録画面 -->
-        <?php if(count($errors) > 0):?>
-            <?php foreach($errors as $value){
-                echo "<p class='error'>".$value."</p>";
-            } ?>
-        <?php endif; ?>
-    <?php elseif(!isset($errors['urltoken_timeover'])): ?>
-        <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>?urltoken=<?php print $urltoken; ?>" method="post">
-	    	<p>メールアドレス：    <?=h($_SESSION['email'])?></p>
-			<p>パスワード：        <input type="password" name="password"></p>
-			<p>パスワード（確認）：<input type="password" name="confirm_password"></p>
-	   		<input type="hidden" name="token" value="<?=$token?>">
-			<input type="submit" name="btn_confirm" value="確認する">
-	    </form>
-	<?php endif; ?>
+    <div class='area create-area'>
+        <div class='create-label'>
+            <div class='create-label-headding-area'>
+                <div class='create-label-headding-area-line'></div>
+                <div class='create-label-headding-number-area'>
+                    <div class='create-label-headding-number'>
+                        No.   2
+                    </div>
+                </div>
+                <div class='create-label-headding'>
+                    パスワードリセットカード
+                </div>
+                <div class='create-label-headding'>
+                    新しいパスワードを入力してください
+                </div>                
+            </div>
+
+            <table>
+                <!-- page3 完了画面 -->
+                <?php if(isset($_POST['btn_submit']) && count($errors) === 0): ?>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>メッセージ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            パスワードをリセットできました。
+                        </td>
+                        <td></td>                    
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            ログインは<a href="m6-login-form.php">こちら</a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                
+                <!-- page2 確認画面 -->
+                <?php elseif(isset($_POST['btn_confirm']) && count($errors) === 0): ?>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>記入欄</th>
+                        <th>ボタン</th>
+                    </tr>
+                </thead>
+
+                <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>?urltoken=<?php print $urltoken; ?>" method="post">
+                    <tbody>
+                        <tr>
+                            <td>メールアドレス</td>
+                            <td>
+                                <?=h($_SESSION['email'])?>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>パスワード</td>
+                            <td>
+                                <?=h($password_hide)?>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="submit" name="btn_back" value="&#xf104; 戻る" class='create-label-botton fas'>
+                                <input type="hidden" name="token" value="<?=$_POST['token']?>">
+                            </td>
+                            <td></td>
+                            <td>
+                                <input type="submit" name="btn_submit" value="登録 &#xf105;" class='create-label-botton fas'>
+                            </td>
+                        </tr>
+                    </tbody>
+                </form>
+
+                <!-- page1 登録画面 -->
+                <?php if(count($errors) > 0):?>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>エラーメッセージ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($errors as $value){ ?>
+                    <tr>
+                        <td></td>
+                        <td><?=$value?></td>
+                        <td></td>
+                    </tr>
+                    <?php } ?>
+                </tbody> 
+                <?php endif; ?>
+
+                <?php elseif(!isset($errors['urltoken_timeover'])): ?>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>記入欄</th>
+                        <th>ボタン</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>?urltoken=<?php print $urltoken; ?>" method="post">
+                    <tr>
+                            <td>メールアドレス</td>
+                            <td>
+                                <?=h($_SESSION['email'])?>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>パスワード</td>
+                            <td>
+                                 <input type="password" name="password" class='create-label-text' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>パスワード（確認）</td>
+                            <td>
+                                <input type="password" name="confirm_password" class='create-label-text' required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input type="hidden" name="token" value="<?=$token?>">
+                                <input type="submit" name="btn_confirm" value="確認 &#xf105;" class='create-label-botton fas'>
+                            </td>
+                        </tr>
+                    </form>
+                </tbody>
+	            <?php endif; ?>
+
+            </table>
+        </div>
+    </div>
 </body>
 </head>
 </html>
