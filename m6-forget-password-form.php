@@ -32,6 +32,7 @@
     $PASS = $_ENV["PASS"];
 
     $errors = [];
+    $date = date('Y年m月d日');
 
     // DB接続設定
     try {
@@ -95,7 +96,7 @@
                     $stmt_password_resete -> bindParam(':flag', $flag, PDO::PARAM_INT);                    
                     $stmt_password_resete -> execute();
                          
-                    $_SESSION['body'] = $receivername."様<br>ご利用くださりありがとうございます。<br>下記URLにて24時間以内にパスワードを再設定してください。<br>".$url;
+                    $_SESSION['body'] = $receivername."様<br>ご利用いただきありがとうございます。<br>下記URLにて24時間以内にパスワードを再設定してください。<br>".$url;
                          
                     require_once 'phpmailer/send_test.php';
                       
@@ -108,26 +109,105 @@
         }
     }
 ?>
+
+<div class='area'>
+    <div class='pre-create-label'>
+        <div class='pre-create-label-headding-area'>
+            <div class='pre-create-label-headding pre-create-label-headding-main password-resets-headding-main'>
+                パスワードリセット伝票
+            </div>
+            <div class='pre-create-label-headding-message'>
+                すでに登録済みの方は<a href="m6-login-form.php">こちら</a>
+            </div>
+            <div class='pre-create-label-headding-name-date-right-area'>
+                <div>
+                    <div class='pre-create-label-headding pre-create-label-headding-name'>
+                        ゲスト 様
+                    </div>
+                    <div class='pre-create-label-headding-date'>
+                        <?=$date?>
+                    </div> 
+                </div>
+              
+                <div class='pre-create-label-headding-right'>
+                    <img src='app-name.png' class='pre-create-app-name' alt=<?='観劇感想日記'?>>
+                </div>      
+            </div>
+        </div>
     
-<h1>どうぞ、パスワードリセットを申請してください。</h1>
-<p>すでにご登録済みの方は<a href="m6-login-form.php">こちら</a></p>
-    
-    <!-- 登録完了画面 -->
-        <?php if(isset($_POST['submit']) && count($errors) === 0): ?>
-            <p><?=$message?></p>
-        <?php endif; ?>
+        <table>
+            <!-- 登録完了画面 -->
+            <?php if(isset($_POST['submit']) && count($errors) === 0): ?>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>メッセージ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?=$message?></td>
+                    <td></td>
+                </tr>
+            </tbody>
+
+            <?php endif; ?>
          
-    <!-- 登録画面 -->
-        <?php if(count($errors) > 0): ?>
-            <?php foreach($errors as $value){
-                echo "<p class='error'>".$value."</p>";
-            } ?>
-        <?php endif; ?>
-        <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
-            <p>メールアドレス: <input type="text" name="email" size="50" value="<?php if(!empty($_POST['email'])){echo $_POST['email'];} ?>"></p> 
-            <p>ユーザー名    : <input type="text" name="username" size="50" value="<?php if(!empty($_POST['username'])){echo $_POST['username'];} ?>"></p>
-            <input type="hidden" name="token" value="<?=$token?>">
-            <input type="submit" name="submit" value="送信">
-        </form>
+            <!-- 登録画面 -->
+            <?php if(count($errors) > 0): ?>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>エラーメッセージ</th>
+                    <th></th>
+                </tr>                
+            </thead>
+            <tbody>
+                <?php foreach($errors as $value){ ?>
+                <tr>
+                    <td></td>
+                    <td><?=$value?></td>
+                    <td></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+            <?php endif; ?>
+
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>記入欄</th>
+                    <th>ボタン</th>
+                </tr>
+            </thead>
+
+            <form action="<?php echo $_SERVER['SCRIPT_NAME'] ?>" method="post">
+                <tbody>
+                    <tr>
+                        <td>メールアドレス</td>
+                        <td>
+                            <input type="text" name="email" value="<?php if(!empty($_POST['email'])){echo h($_POST['email']);} ?>" class='pre-create-label-text' required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ユーザー名</td>
+                        <td>
+                        <input type="text" name="username" value="<?php if(!empty($_POST['username'])){echo h($_POST['username']);} ?>" class='pre-create-label-text' required>
+                        </td>
+                        <td>
+                            <input type="hidden" name="token" value="<?=$token?>">
+                            <input type="submit" name="submit" value="送信 &#xf105;" class='pre-create-label-botton fas'>
+                        </td>
+                    </tr>
+                </tbody>
+                
+            </form>
+        </table>
+    </div>
+</div>
+
 </body>
 </html>
