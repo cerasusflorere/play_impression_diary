@@ -56,14 +56,14 @@
     border-top: 1px solid lightgrey;
   }
 
-/* ホーム画面 */
-.login-area {
+/* 共通要素  */
+.area {
   display: flex;
   width: 100%;
   height: 100%;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   background:
     linear-gradient(
       90deg,
@@ -78,6 +78,11 @@
       #E4C19E 0.6%,
       #E4C19E 1%
     );
+}
+
+/* ログイン画面 */
+.login-area {
+  justify-content: flex-end;
 }
 .login-book {
   z-index: 2;
@@ -232,48 +237,115 @@
       #744d30 0.5% );
 }
 
-/* 初期登録 */
-.pre-create-area {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(208, 147, 82, 0.6),
-      rgba(192, 134, 70, 0.6) 60%,
-      rgba(208, 147, 82, 0.6)
-    ),
-    repeating-radial-gradient(
-      ellipse at 60% 500%,
-      #D9B690,
-      #D9B690 0.2%,
-      #E4C19E 0.6%,
-      #E4C19E 1%
-    );
-}
+/*新規登録 */
 /* 貸出票 */
-.pre-create-label {
+.create-label {
   background-color: #FCF3E1;
 }
-table, td, th{
-  border: 1px solid black;
+table {
+  border-collapse: collapse;
 }
-.pre-create-label-th {
+tr {
+  height: 2.5em;
+}
+td, th{
+  border: 1px solid #663300;
+}
+th:nth-of-type(1), td:nth-of-type(1) {
+  border-left: none;
+  width: 10em;
+}
+th:nth-of-type(2), td:nth-of-type(2) {
+  width: 15.6em;
+}
+th:nth-of-type(3), td:nth-of-type(3) {
+  border-right: none;
+  width: 4em;
+  text-align: center;
+}
+th {
+  border-top: 3px double #663300; /* ヘッダ行の下線 */
+  color: #663300;
+}
+td {
+  padding: 0 5px; 
+}
+td input { 
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+}
+.create-label-text:focus {
+  border-bottom: 1px solid #663300;
+  padding-bottom: 3px;
+}
+.create-label-headding-area {
   display: flex;
-  justify-content: center;
-  width: 290%;
+  flex-direction: column;
+  align-items: center;
+  height: 6.5em;
 }
-.pre-create-label-headding {
+.create-label-headding-area-line {
+  background-color: #663300;
+  height: 3.5px;
+  width: 100%;
+}
+/*.create-label-headding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-image: linear-gradient(180deg, #663300 1px, transparent 1px); /* 罫線の色と太さ  */
-  background-size: 100% 2em; /* 行の高さ */
-  line-height: 2em; /* 文字の高さ */
-  padding-top: -1px;
-  padding-bottom: 1px; /* 最終行の下にも罫線を引く */
-  width: 15em;
+  /*background-size: 100% 2em; /* 行の高さ */
+  /*line-height: 2em; /* 文字の高さ */
+  /*padding-bottom: 1px; /* 最終行の下にも罫線を引く */
+  /*width: 15em;
+  position: relative;
+  top: 3px;
+}*/
+.create-label-headding {
+  display: flex;
+  border-bottom: solid 1px #663300;
+  position: relative;
+  top: 0.5em;
+  width: 23em;
+  justify-content: center;
+}
+.create-label-headding-number-area {
+  display: flex;
+  position: relative;
+  top: 0.3em;
+  right: 1em;
+  width: 90%;
+  justify-content: flex-end;
+}
+.create-label-headding-number { 
+  border-bottom: dashed 1px #663300;
+  display: flex;
+  position: relative;
+  width: 4em;
+  justify-content: center;
+}
+.create-label-botton {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  justify-content: center;
+  color: #663300;
+}
+.create-label-footer {
+  display: flex;
+  height: 2em;
+  width: 100%;
+  align-items: center;
+}
+.create-label-footer-message { 
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  width: 98%;
+  font-size: 0.8em;
 }
 
 /* 詳細 */
