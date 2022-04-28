@@ -52,10 +52,10 @@
         if ($urltoken === ''){
             $errors['urltoken'] = "トークンがありません。";
         }else{
-            $flag = 0;
+            $flag = (int)0;
             $date = date('Y-m-d H:i:s',strtotime("- 24hours"));
             //flagが0の未登録者 or 仮登録日から24時間以内  
-            $stmt_confirm = $pdo->prepare("SELECT email FROM pre_user WHERE urltoken=:urltoken AND flag=:flag  AND date>=:date LIMIT 1");
+            $stmt_confirm = $pdo->prepare("SELECT email FROM pre_user WHERE urltoken=:urltoken AND flag=:flag AND date>=:date LIMIT 1");
             $stmt_confirm->bindParam(':urltoken', $urltoken, PDO::PARAM_STR);
             $stmt_confirm->bindValue(':flag', $flag, PDO::PARAM_INT);
             $stmt_confirm->bindParam(':date', $date, PDO::PARAM_STR);
