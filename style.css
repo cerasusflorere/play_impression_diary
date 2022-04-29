@@ -81,7 +81,7 @@
 }
 
 /* ログイン画面 */
-.login-area {
+.area-login {
   justify-content: flex-end;
 }
 .login-book {
@@ -394,18 +394,6 @@
   height: 3.5px;
   width: 100%;
 }
-/*.create-label-headding {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-image: linear-gradient(180deg, #663300 1px, transparent 1px); /* 罫線の色と太さ  */
-  /*background-size: 100% 2em; /* 行の高さ */
-  /*line-height: 2em; /* 文字の高さ */
-  /*padding-bottom: 1px; /* 最終行の下にも罫線を引く */
-  /*width: 15em;
-  position: relative;
-  top: 3px;
-}*/
 .create-label-headding {
   display: flex;
   border-bottom: solid 1px #663300;
@@ -458,6 +446,107 @@
 /* パスワードリセット */
 .password-resets-headding-main {
   width: 13.5em;
+}
+
+/*ホーム*/
+.area-home {
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+.book-area {
+  display: flex;
+  background-color: #ffbf7f;
+  width: 41em;
+  height: 31em;
+  justify-content: center;
+  align-items: center;
+}
+.book-page-area {
+  display: flex;
+}
+.page {
+  background-color: #FFF;
+  padding: 1.5em;
+  width: 20em;
+  height: 30em;
+}
+.page-left {
+  border-right: 1px solid #ccc;
+}
+.page-right {
+  border-left: 1px solid #ccc;
+}
+.note {
+  background-color: #fff; /* 背景色 */
+  background-image: linear-gradient(180deg, #ccc 1px, transparent 1px); /* 罫線の色と太さ  */
+  background-size: 100% 2.5em; /* 行の高さ */
+  line-height: 2.5em; /* 文字の高さ */
+  padding-bottom: 1px; /* 最終行の下にも罫線を引く */
+  padding-left: 0;
+  list-style-type: none;
+  margin: 0;
+}
+.note li {
+  width: 18.75em;
+  height: 2.5em;
+}
+.bookmark-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 1.5em;
+}
+.bookmark-ribbon-area {
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: 0.5em;
+}
+.bookmark-ribbon {
+  width: 6.25em;
+  height: 0.625em;
+  background-color: #FFF;
+}
+.bookmark-ribbon-left {
+  transform:rotate(65deg);
+  position: relative;
+  right: -1.9em;
+}
+.bookmark-ribbon-right {
+  transform:rotate(-65deg);
+  position: relative;
+  left: -1.9em;
+}
+.bookmark {
+  list-style-type: none;
+  margin: 2em;
+  padding: 1em;
+  background-color: #f4a460;
+  width: 8em;
+  height: 20em;
+}
+.bookmark li {
+  line-height: 2.5em;
+  color: #FFF;
+}
+.bookmark form {
+  position: relative;
+  top: 1em;
+}
+.bookmark-button {
+  padding: 0;
+  border: none; 
+  outline: none;
+  background: transparent;
+  font-size: 1em;
+  color: #FFF;
+  cursor: pointer;
+}
+.bookmark a {
+  text-decoration: none;
+  color: #FFF;
 }
 
 /* 詳細 */
