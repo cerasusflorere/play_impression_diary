@@ -43,6 +43,7 @@
     }
 
     $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL;
+    $username  = isset($_SESSION['username']) ? $_SESSION['username'] : NULL;
     $performance = [];
     $id = [];
     $count_results = 0; // useridが投稿した公演数
@@ -54,6 +55,7 @@
     if(isset($_POST['return_home_index'])){
         $_SESSION = array();
         $_SESSION['userid'] = $userid;
+        $_SESSION['username'] = $username;
         $_SESSION['token'] = $token;
     }
          
@@ -68,12 +70,15 @@
                 if(isset($row['performance'])){
                     $count_results++;
                     $id[$count_results] = $row['id'];
-                    $performance[$count_results] = h($row['performance']);
+                    $performances[$count_results] = h($row['performance']);
                     $_SESSION['performances_id'][$count_results] = $row['id'];
                     $_SESSION['performances_title'][$count_results] = h($row['performance']);
                 }
             }
         }
+        $send_count_results = json_encode($count_results);
+        $send_performances_id = json_encode($id);
+        $send_performances_title = json_encode($performances);
     }catch(PDOException $e){
         //トランザクション取り消し
         $pdo -> rollBack();
@@ -92,21 +97,59 @@
 ?>
     
 <body>
-    <?php if($count_results > 0): ?>
-        <?php for($i=1; $i<=$count_results; $i++){ ?>
-            <form action="m6-indivisual-subject-show.php" method="post" name="<?php echo $performance[$i]; ?>">
-                <p><?php echo $i.":"; ?>
-                <a href="m6-indivisual-subject-show.php" onClick="<?php echo 'document.'.$performance[$i].'.submit();return false;' ?>"><?php echo $performance[$i]; ?></a></p>
-                <input type=hidden name='performance_id' value="<?php echo $id[$i]; ?>">
-            </form>
-        <?php } ?>
-    <?php else :
-            echo "データがありません。<br>";
-        endif; ?>
-    <form action="" method="post">
-        <input type="submit" name="btn_add" value="追加する">
-        <p><a href = "m6-logout.php">ログアウトはこちら</a></p>
-        <p><a href = "m6-withdrow.php">退会する</a></p>
-    </form>
+   <div class='area area-home'>
+        <div class='book-area'>
+           <div class='book-page-area'>
+                <div class='page page-left'>
+                    <ul class='note'>
+                        <?php if($count_results > 0): ?>
+                        <?php for($i=1; $i<=$count_results; $i++){ ?>
+                        <form action="m6-indivisual-subject-show.php" method="post" name="<?=$performances[$i]?>">
+                            <li><?php echo $i.":"; ?>
+                            <a href="m6-indivisual-subject-show.php" onClick="<?='document.'.$performances[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
+                            <input type=hidden name='performance_id' value="<?=$id[$i]?>">
+                        </form>
+                        <?php } ?>
+                        <?php for($i=$count_results+1; $i<12; $i++){ ?>
+                             <li></li>
+                        <?php } ?>
+                        <?php else :
+                           echo "データがありません。<br>";
+                        endif; ?>
+                      
+                    </ul>            
+                </div>
+                <div class='page page-right'>
+                    <ul class='note'>
+                        <?php for($i=1; $i<12; $i++){ ?>
+                            <li></li>
+                        <?php } ?>
+                    </ul>
+                </div>
+           </div>
+        </div>
+        <div class='bookmark-area'>
+            <div class='bookmark-ribbon-area'>
+                <div class='bookmark-ribbon bookmark-ribbon-left'></div>
+                <div class='bookmark-ribbon bookmark-ribbon-right'></div>
+            </div>            
+            <ul class='bookmark'>
+                <li><?=h($username)?>さん</li>
+                <form action="" method="post">
+                    <li><input type="submit" name="btn_add" value="追加" class='bookmark-button'></li>
+                    <li><a href="m6-profile.php">プロフィール</a></li>
+                    <li><a href="m6-logout.php">ログアウト</a></li>
+                </form>
+            </ul>
+        </div>
+   </div>
+
+   <script>
+        const count_results = JSON.parse(<?=$send_count_results?>);
+        const performances_title = JSON.parse('<?=$send_performances_title?>');
+        const performances_id = JSON.parse('<?=$send_performances_id?>');
+        console.log(performances_title);
+    </script>
+
 </body>        
-</html>
+</html>  
