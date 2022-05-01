@@ -104,9 +104,9 @@
                     <ul class='note'>
                         <?php if($count_results > 0): ?>
                         <?php for($i=1; $i<=$count_results; $i++){ ?>
-                        <form action="m6-indivisual-subject-show.php" method="post" name="<?=$performances[$i]?>">
+                        <form action="m6-indivisual-subject-show.php" method="post" name="<?='form'.$id[$i]?>">
                             <li><?php echo $i.":"; ?>
-                            <a href="m6-indivisual-subject-show.php" onClick="<?='document.'.$performances[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
+                            <a href="m6-indivisual-subject-show.php" onClick="<?='document.form'.$id[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
                             <input type=hidden name='performance_id' value="<?=$id[$i]?>">
                         </form>
                         <?php } ?>
