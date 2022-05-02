@@ -146,98 +146,106 @@
                 const pageInput = document.createElement('input')
                 pageInput.type = 'checkbox';
 
-                // 右側
-                const pageSpan_right = document.createElement('span');
-                pageSpan_right.classList.add("page", "page-right");
-                pageSpan_right.style.zIndex = counts-i;
+                const before = new Promise(function(resolve, reject) {
+                    const in_before = new Promise((function(res, rej) {
+                        // 右側
+                        const pageSpan_right = document.createElement('span');
+                        pageSpan_right.classList.add("page", "page-right");
+                        pageSpan_right.style.zIndex = counts-i;
 
-                const pageUl_right = document.createElement('ul');
-                pageUl_right.className = 'note';
-                
-                for(j=i*24; j<i*24+11; j++){
-                    if(typeof id[j] != 'undefined'){
-                        if(id[j][1] != 0){
-                            const pageForm = document.createElement('form');
-                            pageForm.action = 'm6-indivisual-subject-show.php';
-                            pageForm.method = 'post';
-                            pageForm.name = 'form'+id[j][1];
+                        const pageUl_right = document.createElement('ul');
+                        pageUl_right.className = 'note';
+                  
+                        for(j=i*24; j<i*24+11; j++){
+                            if(typeof id[j] != 'undefined'){
+                                if(id[j][1] != 0){
+                                const pageForm = document.createElement('form');
+                                pageForm.action = 'm6-indivisual-subject-show.php';
+                                pageForm.method = 'post';
+                                pageForm.name = 'form'+id[j][1];
 
-                            const pageLi = document.createElement('li');
-                            pageLi.innerHTML = j+1+': ';
+                                const pageLi = document.createElement('li');
+                                pageLi.innerHTML = j+1+': ';
    
-                            const pageA = document.createElement('a');
-                            pageA.href = 'm6-indivisual-subject-show.php';
-                            pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
-                            pageA.innerHTML = title[j][1];
+                                const pageA = document.createElement('a');
+                                pageA.href = 'm6-indivisual-subject-show.php';
+                                pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
+                                pageA.innerHTML = title[j][1];
 
-                            const pageInput_hidden = document.createElement('input');
-                            pageInput_hidden.type = 'hidden';
-                            pageInput_hidden.name = 'performance_id';
-                            pageInput_hidden.value = id[j][1];
+                                const pageInput_hidden = document.createElement('input');
+                                pageInput_hidden.type = 'hidden';
+                                pageInput_hidden.name = 'performance_id';
+                                pageInput_hidden.value = id[j][1];
 
-                            pageLi.appendChild(pageA);
-                            pageForm.appendChild(pageLi);
-                            pageForm.appendChild(pageInput_hidden);
-                            pageUl_right.appendChild(pageForm);
-                        }else{
-                            const pageLi = document.createElement('li');
-                            pageLi.innerHTML = title[j][1];
-                            pageUl_right.appendChild(pageLi);
-                        }
+                                pageLi.appendChild(pageA);
+                                pageForm.appendChild(pageLi);
+                                pageForm.appendChild(pageInput_hidden);
+                                pageUl_right.appendChild(pageForm);
+                            }else{
+                                const pageLi = document.createElement('li');
+                                pageLi.innerHTML = title[j][1];
+                                pageUl_right.appendChild(pageLi);
+                            }
                         
-                    }else{
-                        const pageLi = document.createElement('li');
-                        pageUl_right.appendChild(pageLi);
-                    }
-                }
-                pageSpan_right.appendChild(pageUl_right);
-
-                // 左側
-                const pageSpan_left = document.createElement('span');
-                pageSpan_left.classList.add("page", "page-left");
-
-                const pageUl_left = document.createElement('ul');
-                pageUl_left.className = 'note';
-                
-                for(j=i*24+11; j<i*24+22; j++){
-                    if(typeof id[j] != 'undefined'){
-                        const pageForm = document.createElement('form');
-                        pageForm.action = 'm6-indivisual-subject-show.php';
-                        pageForm.method = 'post';
-                        pageForm.name = 'form'+id[j][1];
-
-                        const pageLi = document.createElement('li');
-                        pageLi.innerHTML = j+1+': ';
+                            }else{
+                                const pageLi = document.createElement('li');
+                                pageUl_right.appendChild(pageLi);
+                            }
+                        }
+                        pageSpan_right.appendChild(pageUl_right);
+  
+                        // 左側
+                        const pageSpan_left = document.createElement('span');
+                        pageSpan_left.classList.add("page", "page-left");
+    
+                        const pageUl_left = document.createElement('ul');
+                        pageUl_left.className = 'note';
+                     
+                        for(j=i*24+11; j<i*24+22; j++){
+                            if(typeof id[j] != 'undefined'){
+                                const pageForm = document.createElement('form');
+                                pageForm.action = 'm6-indivisual-subject-show.php';
+                                pageForm.method = 'post';
+                                pageForm.name = 'form'+id[j][1];
+    
+                                const pageLi = document.createElement('li');
+                                pageLi.innerHTML = j+1+': ';
    
-                        const pageA = document.createElement('a');
-                        pageA.href = 'm6-indivisual-subject-show.php';
-                        pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
-                        pageA.innerHTML = title[j][1];
+                                const pageA = document.createElement('a');
+                                pageA.href = 'm6-indivisual-subject-show.php';
+                                pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
+                                pageA.innerHTML = title[j][1];
 
-                        const pageInput_hidden = document.createElement('input');
-                        pageInput_hidden.type = 'hidden';
-                        pageInput_hidden.name = 'performance_id';
-                        pageInput_hidden.value = id[j][1];
+                                const pageInput_hidden = document.createElement('input');
+                                pageInput_hidden.type = 'hidden';
+                                pageInput_hidden.name = 'performance_id';
+                                pageInput_hidden.value = id[j][1];
 
-                        pageLi.appendChild(pageA);
-                        pageForm.appendChild(pageLi);
-                        pageForm.appendChild(pageInput_hidden);
-                        pageUl_left.appendChild(pageForm);
-                    }else{
-                        const pageLi = document.createElement('li');
-                        pageUl_left.appendChild(pageLi);
-                    }
-                }
-                pageSpan_left.appendChild(pageUl_left);
+                                pageLi.appendChild(pageA);
+                                pageForm.appendChild(pageLi);
+                                pageForm.appendChild(pageInput_hidden);
+                                pageUl_left.appendChild(pageForm);
+                            }else{
+                                const pageLi = document.createElement('li');
+                                pageUl_left.appendChild(pageLi);
+                            }
+                        }
+                        pageSpan_left.appendChild(pageUl_left);
+                        res([pageSpan_right, pageSpan_left]);
+                    }));
+                    resolve(in_before);
+                });
 
-                pageLabel.appendChild(pageInput);
-                pageLabel.appendChild(pageSpan_right);
-                pageLabel.appendChild(pageSpan_left);
+                before.then(result => {
+                   pageLabel.appendChild(pageInput);
+                   pageLabel.appendChild(result[0]);
+                   pageLabel.appendChild(result[1]);
 
-                listArea.appendChild(pageLabel);
+                    listArea.appendChild(pageLabel);
+                });
             }
         }
     </script>
 
 </body>        
-</html>  
+</html>
