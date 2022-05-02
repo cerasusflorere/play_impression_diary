@@ -157,9 +157,9 @@
             <ul class='bookmark'>
                 <li><?=h($username)?>さん</li>
                 <form action="" method="post">
-                    <li><input type="submit" name="btn_add" value="追加" class='bookmark-button'></li>
-                    <li><a href="m6-profile.php">プロフィール</a></li>
-                    <li><a href="m6-logout.php">ログアウト</a></li>
+                    <li><i class="fa-fw fas fa-plus"></i></i><input type="submit" name="btn_add" value="追加" class='bookmark-button'></li>
+                    <li><a href="m6-profile.php"><i class="fa-fw fas fa-user-alt"></i>プロフィール</a></li>
+                    <li><a href="m6-logout.php"><i class="fa-fw fas fa-sign-out-alt"></i>ログアウト</a></li>
                 </form>
             </ul>
         </div>
@@ -182,4 +182,4 @@
     </script>
 
 </body>        
-</html>  
+</html> 
