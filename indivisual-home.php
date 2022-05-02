@@ -44,7 +44,7 @@
 
     $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : NULL;
     $username  = isset($_SESSION['username']) ? $_SESSION['username'] : NULL;
-    $performance = [];
+    $performances = [];
     $id = [];
     $count_results = 0; // useridが投稿した公演数
 
@@ -99,54 +99,8 @@
 <body>
    <div class='area area-home'>
         <div class='book-area'>
-            <div class='book-page-area'>
-                <label>
-                    <input type='checkbox'>
-                    <span class='page page-right' style='z-index: 100; '>
-                    <ul class='note'>
-                            <?php if($count_results > 0): ?>
-                            <?php for($i=1; $i<=$count_results; $i++){ ?>
-                            <form action="m6-indivisual-subject-show.php" method="post" name="<?='form'.$id[$i]?>">
-                                <li><?php echo $i.":"; ?>
-                                <a href="m6-indivisual-subject-show.php" onClick="<?='document.form'.$id[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
-                                <input type=hidden name='performance_id' value="<?=$id[$i]?>">
-                            </form>
-                            <?php } ?>
-                            <?php for($i=$count_results+1; $i<12; $i++){ ?>
-                            <li></li>
-                            <?php } ?>
-                            <?php else :
-                            echo "データがありません。<br>";
-                            endif; ?>                      
-                        </ul>            
-                    </span>
-                    <span class='page page-left'>
-                        <ul class='note'>
-                            <?php for($i=1; $i<12; $i++){ ?>
-                            <li></li>
-                            <?php } ?>
-                        </ul>
-                    </span>
-                </label>
-                
-                <label>
-                    <input type='checkbox'>
-                    <span class='page page-right' style='z-index: 99;'>
-                        <ul class='note'>
-                            <?php for($i=1; $i<12; $i++){ ?>
-                            <li></li>
-                            <?php } ?>
-                        </ul>
-                    </span>
-                    <span class='page page-left'>
-                        <ul class='note'>
-                            <?php for($i=1; $i<12; $i++){ ?>
-                            <li></li>
-                            <?php } ?>
-                        </ul>
-                    </span>
-               </label>
-                
+            <div id='book_page_area' class='book-page-area'>
+                <!-- データ表示 -->
            </div>
         </div>
         <div class='bookmark-area'>
@@ -167,19 +121,123 @@
 
    <script>
         const count_results = JSON.parse(<?=$send_count_results?>);
-        const performances_title_object = JSON.parse('<?=$send_performances_title?>');
         const performances_id_object = JSON.parse('<?=$send_performances_id?>');
-        performances_title = Object.entries(performances_title_object);
+        const performances_title_object = JSON.parse('<?=$send_performances_title?>');
         performances_id = Object.entries(performances_id_object);
+        performances_title = Object.entries(performances_title_object);
 
-        const listArea = document.getElementById('note');
+        const listArea = document.getElementById('book_page_area');
+
+        window.onload = showList(count_results,performances_id,performances_title);
 
         function showList(count_number, id, title){
-            if(count_number > 0){
+            if(count_number == 0){
+                // データがない場合
+                const id_object = [[0, 0]];
+                id = id_object;
+
+                const title_object = [[0, 'データがありません。']];
+                title = title_object;
+            }
+
+            counts = Math.floor(count_number/24); // 24個のデータで表裏1ページ、1ページ毎に表示
+            for(i=0; i<counts+1; i++){
+                const pageLabel = document.createElement('label');
+                const pageInput = document.createElement('input')
+                pageInput.type = 'checkbox';
+
+                // 右側
+                const pageSpan_right = document.createElement('span');
+                pageSpan_right.classList.add("page", "page-right");
+                pageSpan_right.style.zIndex = counts-i;
+
+                const pageUl_right = document.createElement('ul');
+                pageUl_right.className = 'note';
                 
+                for(j=i*24; j<i*24+11; j++){
+                    if(typeof id[j] != 'undefined'){
+                        if(id[j][1] != 0){
+                            const pageForm = document.createElement('form');
+                            pageForm.action = 'm6-indivisual-subject-show.php';
+                            pageForm.method = 'post';
+                            pageForm.name = 'form'+id[j][1];
+
+                            const pageLi = document.createElement('li');
+                            pageLi.innerHTML = j+1+': ';
+   
+                            const pageA = document.createElement('a');
+                            pageA.href = 'm6-indivisual-subject-show.php';
+                            pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
+                            pageA.innerHTML = title[j][1];
+
+                            const pageInput_hidden = document.createElement('input');
+                            pageInput_hidden.type = 'hidden';
+                            pageInput_hidden.name = 'performance_id';
+                            pageInput_hidden.value = id[j][1];
+
+                            pageLi.appendChild(pageA);
+                            pageForm.appendChild(pageLi);
+                            pageForm.appendChild(pageInput_hidden);
+                            pageUl_right.appendChild(pageForm);
+                        }else{
+                            const pageLi = document.createElement('li');
+                            pageLi.innerHTML = title[j][1];
+                            pageUl_right.appendChild(pageLi);
+                        }
+                        
+                    }else{
+                        const pageLi = document.createElement('li');
+                        pageUl_right.appendChild(pageLi);
+                    }
+                }
+                pageSpan_right.appendChild(pageUl_right);
+
+                // 左側
+                const pageSpan_left = document.createElement('span');
+                pageSpan_left.classList.add("page", "page-left");
+
+                const pageUl_left = document.createElement('ul');
+                pageUl_left.className = 'note';
+                
+                for(j=i*24+11; j<i*24+22; j++){
+                    if(typeof id[j] != 'undefined'){
+                        const pageForm = document.createElement('form');
+                        pageForm.action = 'm6-indivisual-subject-show.php';
+                        pageForm.method = 'post';
+                        pageForm.name = 'form'+id[j][1];
+
+                        const pageLi = document.createElement('li');
+                        pageLi.innerHTML = j+1+': ';
+   
+                        const pageA = document.createElement('a');
+                        pageA.href = 'm6-indivisual-subject-show.php';
+                        pageA.setAttribute('onclick', 'document.form'+id[j][1]+'.submit();return false');
+                        pageA.innerHTML = title[j][1];
+
+                        const pageInput_hidden = document.createElement('input');
+                        pageInput_hidden.type = 'hidden';
+                        pageInput_hidden.name = 'performance_id';
+                        pageInput_hidden.value = id[j][1];
+
+                        pageLi.appendChild(pageA);
+                        pageForm.appendChild(pageLi);
+                        pageForm.appendChild(pageInput_hidden);
+                        pageUl_left.appendChild(pageForm);
+                    }else{
+                        const pageLi = document.createElement('li');
+                        pageUl_left.appendChild(pageLi);
+                    }
+                }
+                pageSpan_left.appendChild(pageUl_left);
+
+                pageLabel.appendChild(pageInput);
+                pageLabel.appendChild(pageSpan_right);
+                pageLabel.appendChild(pageSpan_left);
+
+                listArea.appendChild(pageLabel);
             }
         }
     </script>
 
 </body>        
-</html> 
+</html>  
