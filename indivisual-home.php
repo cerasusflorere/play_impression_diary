@@ -99,33 +99,54 @@
 <body>
    <div class='area area-home'>
         <div class='book-area'>
-           <div class='book-page-area'>
-                <div class='page page-left'>
+            <div class='book-page-area'>
+                <label>
+                    <input type='checkbox'>
+                    <span class='page page-right' style='z-index: 100; '>
                     <ul class='note'>
-                        <?php if($count_results > 0): ?>
-                        <?php for($i=1; $i<=$count_results; $i++){ ?>
-                        <form action="m6-indivisual-subject-show.php" method="post" name="<?='form'.$id[$i]?>">
-                            <li><?php echo $i.":"; ?>
-                            <a href="m6-indivisual-subject-show.php" onClick="<?='document.form'.$id[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
-                            <input type=hidden name='performance_id' value="<?=$id[$i]?>">
-                        </form>
-                        <?php } ?>
-                        <?php for($i=$count_results+1; $i<12; $i++){ ?>
-                             <li></li>
-                        <?php } ?>
-                        <?php else :
-                           echo "データがありません。<br>";
-                        endif; ?>
-                      
-                    </ul>            
-                </div>
-                <div class='page page-right'>
-                    <ul class='note'>
-                        <?php for($i=1; $i<12; $i++){ ?>
+                            <?php if($count_results > 0): ?>
+                            <?php for($i=1; $i<=$count_results; $i++){ ?>
+                            <form action="m6-indivisual-subject-show.php" method="post" name="<?='form'.$id[$i]?>">
+                                <li><?php echo $i.":"; ?>
+                                <a href="m6-indivisual-subject-show.php" onClick="<?='document.form'.$id[$i].'.submit();return false'?>"><?=$performances[$i]?></a></li>
+                                <input type=hidden name='performance_id' value="<?=$id[$i]?>">
+                            </form>
+                            <?php } ?>
+                            <?php for($i=$count_results+1; $i<12; $i++){ ?>
                             <li></li>
-                        <?php } ?>
-                    </ul>
-                </div>
+                            <?php } ?>
+                            <?php else :
+                            echo "データがありません。<br>";
+                            endif; ?>                      
+                        </ul>            
+                    </span>
+                    <span class='page page-left'>
+                        <ul class='note'>
+                            <?php for($i=1; $i<12; $i++){ ?>
+                            <li></li>
+                            <?php } ?>
+                        </ul>
+                    </span>
+                </label>
+                
+                <label>
+                    <input type='checkbox'>
+                    <span class='page page-right' style='z-index: 99;'>
+                        <ul class='note'>
+                            <?php for($i=1; $i<12; $i++){ ?>
+                            <li></li>
+                            <?php } ?>
+                        </ul>
+                    </span>
+                    <span class='page page-left'>
+                        <ul class='note'>
+                            <?php for($i=1; $i<12; $i++){ ?>
+                            <li></li>
+                            <?php } ?>
+                        </ul>
+                    </span>
+               </label>
+                
            </div>
         </div>
         <div class='bookmark-area'>
@@ -146,9 +167,18 @@
 
    <script>
         const count_results = JSON.parse(<?=$send_count_results?>);
-        const performances_title = JSON.parse('<?=$send_performances_title?>');
-        const performances_id = JSON.parse('<?=$send_performances_id?>');
-        console.log(performances_title);
+        const performances_title_object = JSON.parse('<?=$send_performances_title?>');
+        const performances_id_object = JSON.parse('<?=$send_performances_id?>');
+        performances_title = Object.entries(performances_title_object);
+        performances_id = Object.entries(performances_id_object);
+
+        const listArea = document.getElementById('note');
+
+        function showList(count_number, id, title){
+            if(count_number > 0){
+                
+            }
+        }
     </script>
 
 </body>        
