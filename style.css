@@ -582,6 +582,7 @@
 .area-add {
   flex-direction: row;
   align-content: center;
+  overflow-x: hidden;
 }
 .book-area-add {
   height: 35em;
@@ -590,9 +591,8 @@
 .page-add {
   height: 34em;
   width: 24em;
-  display: flex;
+  padding: 1em 1.5em;
 }
-
 .add-book-page-area-input {display:none;}
 .add-book-page-area-input~span {
   transition:1.5s;
@@ -632,6 +632,14 @@
 }
 .add-period { 
   width: 9.8em;
+}
+.add-textarea-area {
+  display: flex;
+  height: 4em;
+  align-items: baseline;
+}
+.add-textarea {
+  height: 4.3em;
 }
 
 /* 詳細 */
