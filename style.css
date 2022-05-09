@@ -453,6 +453,7 @@
   justify-content: center;
   flex-direction: row;
   align-items: center;
+  overflow: hidden;
 }
 .book-area {
   display: flex;
@@ -460,22 +461,51 @@
   width: 41em;
   height: 31em;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .book-page-area {
   display: flex;
+  position: relative;
 }
 .page {
   background-color: #FFF;
   padding: 1.5em;
   width: 20em;
   height: 30em;
+  margin-top: 0.5em;
+}
+.first-page {
+  position: relative;
+  right: 50%;
 }
 .page-left {
   border-right: 1px solid #ccc;
 }
 .page-right {
   border-left: 1px solid #ccc;
+}
+.home-book-page-area-input{display:none;}
+.home-book-page-area-input~span{
+  transition:1.5s;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+  position:absolute;
+}
+.home-book-page-area-input+span{
+  left:50%;
+  transform-origin:left;
+  transform:perspective(1500px) rotateY(0deg);
+}
+.home-book-page-area-input+span+span{
+  right:50%;
+  transform-origin:right;
+  transform:perspective(1500px) rotateY(180deg);
+}
+.home-book-page-area-input:checked+span{
+  transform:perspective(1500px) rotateY(-180deg);
+}
+.home-book-page-area-input:checked+span+span{
+  transform:perspective(1500px) rotateY(0deg);
 }
 .note {
   background-color: #fff; /* 背景色 */
@@ -488,7 +518,6 @@
   margin: 0;
 }
 .note li {
-  width: 18.75em;
   height: 2.5em;
 }
 .bookmark-area {
@@ -524,7 +553,7 @@
   margin: 2em;
   padding: 1em;
   background-color: #f4a460;
-  width: 8em;
+  width: 9.5em;
   height: 20em;
 }
 .bookmark li {
@@ -544,9 +573,65 @@
   color: #FFF;
   cursor: pointer;
 }
-.bookmark a {
+.bookmark a, .bookmark i {
   text-decoration: none;
   color: #FFF;
+}
+
+/* 追加 */
+.area-add {
+  flex-direction: row;
+  align-content: center;
+}
+.book-area-add {
+  height: 35em;
+  width: 49em;
+}
+.page-add {
+  height: 34em;
+  width: 24em;
+  display: flex;
+}
+
+.add-book-page-area-input {display:none;}
+.add-book-page-area-input~span {
+  transition:1.5s;
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+  position:absolute;
+}
+.add-book-page-area-input+span+span {
+  right:50%;
+  transform-origin:right;
+  transform:perspective(1500px) rotateY(180deg);
+}
+.add-book-page-area-input+span {
+  left:50%;
+  transform-origin:left;
+  transform:perspective(1500px) rotateY(0deg);
+}
+.add-book-page-area-input:checked+span+span {
+  transform:perspective(1500px) rotateY(0deg);
+}
+.add-book-page-area-input:checked+span {
+  transform:perspective(1500px) rotateY(-180deg);
+}
+.book-page-area .page-add-first-right {
+  transform: none;
+}
+.book-page-area .page-add-first-left {
+  right: 50%;
+  transform: none;
+}
+.note-add { 
+  background-size: 100% 2em;
+  line-height: 2em;
+}
+.note-add li {
+  height: 2em;
+}
+.add-period { 
+  width: 9.8em;
 }
 
 /* 詳細 */
