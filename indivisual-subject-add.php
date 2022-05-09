@@ -412,7 +412,7 @@
                     </div>
              
 	     	    	<p>あらすじ：<?=h($_SESSION['scenario'])?></p>
-		    	    <p>全体について思うこと：<?=h($_SESSION['impression_all'])?></p>
+		    	    <p>全体について：<?=h($_SESSION['impression_all'])?></p>
      			    <?php for($i=0; $i<50; $i++){ 
 	    		    if(isset($_SESSION['player_impression'][$i])): ?>
 		     	    <p>出演者について感想：<?=h($_SESSION['player_impression'][$i])?> 
@@ -492,21 +492,38 @@
                                     <input type="button" id="add_player" value='+' onclick="addPlayer()">
                                     <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
                                 </li>
-                    			<li>あらすじ：<textarea name="scenario" value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea></li>
-                    			<li>全体について思うこと：<textarea name="impression_all" value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea></li>
+                    			<li>
+                                    <div class='add-textarea-area'>
+                                        あらすじ：<textarea name="scenario" class='add-textarea' value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea>
+                                    </div>    
+                                </li>
+                                <li></li>
+                    			<li>
+                                    <div class='add-textarea-area'>
+                                        全体について：<textarea name="impression_all" class='add-textarea' value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea>
+                                    </div>
+                                </li>
+                                <li></li>
                                 <li>出演者に対する感想</li>
                                 <div id='all_impressions_player_area'>
                                     <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
-                                    <li id='impression_area_<?php echo $i; ?>'>
-                                        出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
-                                        <?php if(isset($_SESSION['drop_select_impression_players'])){
-                                            echo $_SESSION['drop_select_impression_players'][$i];
-                                        }else{
-                                            echo $_SESSION['drop_impression_players'];
-                                        } ?>
-                                               </select>
-			                            出演者に対するコメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
-                                    </li>
+                                    <div id='impression_area_<?php echo $i; ?>'>
+                                        <li>
+                                            出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
+                                            <?php if(isset($_SESSION['drop_select_impression_players'])){
+                                                echo $_SESSION['drop_select_impression_players'][$i];
+                                            }else{
+                                                echo $_SESSION['drop_impression_players'];
+                                            } ?>
+                                            </select>
+                                        </li>
+			                            <li>
+                                            <div class='add-textarea-area'>
+                                                コメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' class='add-textarea' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
+                                            </div>
+                                        </li>
+                                        <li></li>
+                                    </div>
                                     <?php } ?>                
                                 </div>
                                 <li>
@@ -516,17 +533,27 @@
                      			<li>好きな場面とその理由</li>
                                 <div id='all_impressions_scene_area'>
                                     <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
-                                    <li id='impression_scene_area_<?php echo $i; ?>'>
-                                        <input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
-                                        <textarea name="impression_scene[]" value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
-                                    </li>
+                                    <div id='impression_scene_area_<?php echo $i; ?>'>
+                                        <li>
+                                            <input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
+                                        </li>
+                                        <li>
+                                            <textarea name="impression_scene[]" class='add-textarea' value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
+                                        </li>
+                                        <li></li>
+                                    </div>
                                     <?php } ?>                                        
                                 </div>
                                 <li>
                                     <input type="button" id="add_impression_scene" type="button" value='+' onclick="addImpression_Scene()">
                                     <input type="button" id="disp_impression_scene" value='-' onclick="dispImpression_Scene()">
                                 </li>
-                    	   		<li>最後に：<textarea name="impression_final" value="<?php if( !empty($_SESSION['impression_final']) ){ echo h($_SESSION['impression_final']); } ?>"></textarea></li>
+                    	   		<li>
+                                    <div class='add-textarea-area'>
+                                        最後に：<textarea name="impression_final" class='add-textarea' value="<?php if( !empty($_SESSION['impression_final']) ){ echo h($_SESSION['impression_final']); } ?>"></textarea>
+                                    </div>
+                                </li>
+                                <li></li>
                 	      		<li>関連のある公演：</li>
                                 <div id='all_related_performances_area'>
                                     <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
