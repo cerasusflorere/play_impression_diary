@@ -18,8 +18,7 @@
     //クリックジャッキング対策
     header('X-FRAME-OPTIONS: SAMEORIGIN'); 
 
-    function h($str)
-    {
+    function h($str){
         return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
     }
 
@@ -374,170 +373,194 @@
 ?>
 
 <body>
-    <h1>楽しかった公演の記録をどうぞ！</h1>
-    <!-- page3 完了画面 -->
-    <?php if(count($errors) === 0 && isset($_POST['btn_submit'])): ?>
-        <?php echo $sucess.PHP_EOL; ?>
-            <p>ホーム<a href="m6-indivisual-home.php">こちら</a></p>
+    <div class='area area-add'>
+        <div class='book-area book-area-add'>
+            <div class='book-page-area'>
+                <!-- page3 完了画面 -->
+                <?php if(count($errors) === 0 && isset($_POST['btn_submit'])): ?>
+                <?php echo $sucess.PHP_EOL; ?>
+                <p>ホーム<a href="m6-indivisual-home.php">こちら</a></p>
    
-    <!-- page2 確認画面 -->
-    <?php elseif(count($errors) === 0 && isset($_POST['btn_confirm'])): ?>
-        <form action="" method="post" enctype="multipart/form-data">
-		    <p>公演：<?=h($_SESSION['performance'])?></p>
-			<p>劇団：<?=h($_SESSION['theatrical_company'])?></p>
-			<p>観劇日：<?=h($_SESSION['date'])?></p>
-			<p>開演時刻：<?=h($_SESSION['open_time'])?> ~ 終演時刻：<?=h($_SESSION['close_time'])?></p>
-			<p>観劇した劇場：<?=h($_SESSION['theater'])?></p>
-			<p>座席：<?=h($_SESSION['seat'])?></p>
-			<p>主催：<?=h($_SESSION['organizer'])?></p>
-			<p>演出：<?=h($_SESSION['director'])?></p>
-			<p>作家：<?=h($_SESSION['author'])?></p>
-			<p>振付：<?=h($_SESSION['dance'])?></p>
-		    <p>音楽：<?=h($_SESSION['music'])?></p>
-			<p>作詞：<?=h($_SESSION['lyrics'])?></p>
-			<p>衣装：<?=h($_SESSION['costume'])?></p>
-			<p>照明：<?=h($_SESSION['illumination'])?></p>
-			<p>小道具：<?=h($_SESSION['property'])?></p>
-			<p>公演期間：<?=h($_SESSION['first_date'])?> ~ <?=h($_SESSION['final_date'])?></p>
-			<p>出演者：</p>
-            <div>
-                <?php for($i=0; $i<50; $i++){ 
-			        if(isset($_SESSION['player'][$i])): ?>
-			            <?=h($_SESSION['player'][$i])?> <?php echo ' '; ?>
-				    <?php  else :
-				            break;
-				endif; 
-			    }?>
-            </div>
-            
-			<p>あらすじ：<?=h($_SESSION['scenario'])?></p>
-			<p>全体について思うこと：<?=h($_SESSION['impression_all'])?></p>
-			<?php for($i=0; $i<50; $i++){ 
-			        if(isset($_SESSION['player_impression'][$i])): ?>
-			            <p>出演者について感想：<?=h($_SESSION['player_impression'][$i])?> 
-				           出演者に対するコメント：<?=h($_SESSION['impression_player'][$i])?></p>
-				    <?php  else :
-				            break;
-				endif; 
-			}?>
-			<?php for ($i=0; $i<50; $i++){ 
-			        if(isset($_SESSION['scene_impression'][$i])): ?>
-				        <p>好きな場面：<?=h($_SESSION['scene_impression'][$i])?>
-                           感想：<?=h($_SESSION['impression_scene'][$i])?></p>
-                    <?php  else :
-                             break;
-                  endif; 
-            } ?>
-	   		<p>最後に：<?=h($_SESSION['impression_final'])?></p>
-	   		<?php for($i=0; $i<10; $i++){ 
-	   		            if(isset($_SESSION['related_performances_id'][$i])): ?>
-	   			            <p>関連のある公演：<?=h($_SESSION['related_performances_title'][$i])?></p>
-	   			        <?php  else :
-	   			                 break;
-	   			    endif;
-	   		} ?>
+                <!-- page2 確認画面 -->
+                <?php elseif(count($errors) === 0 && isset($_POST['btn_confirm'])): ?>
+                <form action="" method="post" enctype="multipart/form-data">
+		            <p>公演：<?=h($_SESSION['performance'])?></p>
+     			    <p>劇団：<?=h($_SESSION['theatrical_company'])?></p>
+     	     		<p>観劇日：<?=h($_SESSION['date'])?></p>
+	    	    	<p>開演時刻：<?=h($_SESSION['open_time'])?> ~ 終演時刻：<?=h($_SESSION['close_time'])?></p>
+    	    		<p>観劇した劇場：<?=h($_SESSION['theater'])?></p>
+	    	    	<p>座席：<?=h($_SESSION['seat'])?></p>
+                    <p>公演期間：<?=h($_SESSION['first_date'])?> ~ <?=h($_SESSION['final_date'])?></p>
+     		    	<p>主催：<?=h($_SESSION['organizer'])?></p>
+	    		    <p>演出：<?=h($_SESSION['director'])?></p>
+    	    		<p>作家：<?=h($_SESSION['author'])?></p>
+	    	    	<p>振付：<?=h($_SESSION['dance'])?></p>
+		            <p>音楽：<?=h($_SESSION['music'])?></p>
+    			    <p>作詞：<?=h($_SESSION['lyrics'])?></p>
+        			<p>衣装：<?=h($_SESSION['costume'])?></p>
+	        		<p>照明：<?=h($_SESSION['illumination'])?></p>
+		        	<p>小道具：<?=h($_SESSION['property'])?></p>			    
+    			    <p>出演者：</p>
+                    <div>
+                        <?php for($i=0; $i<50; $i++){ 
+		    	        if(isset($_SESSION['player'][$i])): ?>
+			                <?=h($_SESSION['player'][$i])?> <?php echo ' '; ?>
+				        <?php  else :
+				               break;
+     			    	endif; 
+	     		        } ?>
+                    </div>
              
-            <input type="submit" name="btn_back" value="戻る">
-            <input type="submit" name="btn_submit" value="登録する">
-        </form>
+	     	    	<p>あらすじ：<?=h($_SESSION['scenario'])?></p>
+		    	    <p>全体について思うこと：<?=h($_SESSION['impression_all'])?></p>
+     			    <?php for($i=0; $i<50; $i++){ 
+	    		    if(isset($_SESSION['player_impression'][$i])): ?>
+		     	    <p>出演者について感想：<?=h($_SESSION['player_impression'][$i])?> 
+			    	   出演者に対するコメント：<?=h($_SESSION['impression_player'][$i])?></p>
+				    <?php  else :
+				           break;
+     				endif; 
+         			} ?>
+	        		<?php for ($i=0; $i<50; $i++){ 
+		            if(isset($_SESSION['scene_impression'][$i])): ?>
+		            <p>好きな場面：<?=h($_SESSION['scene_impression'][$i])?>
+                       感想：<?=h($_SESSION['impression_scene'][$i])?></p>
+                    <?php  else :
+                           break;
+                    endif; 
+                    } ?>
+    	   		    <p>最後に：<?=h($_SESSION['impression_final'])?></p>
+        	   		<?php for($i=0; $i<10; $i++){ 
+	                if(isset($_SESSION['related_performances_id'][$i])): ?>
+	                <p>関連のある公演：<?=h($_SESSION['related_performances_title'][$i])?></p>
+		            <?php  else :
+	                        break;
+     	     	    endif;
+	      	    	} ?>
+             
+                    <input type="submit" name="btn_back" value="戻る">
+                    <input type="submit" name="btn_submit" value="登録する">
+                </form>
    
-    <!-- page1 登録画面 -->
-    <?php if(count($errors) > 0):?>
-        <?php 
-            foreach($errors as $value){
-               echo "<p class='error'>".$value."</p>";
-            }
-        ?>
-        <?php endif; ?>
-    <?php elseif($flag === 1 || isset($_POST['btn_back'])): ?>
-        <form action="" method="post" enctype="multipart/form-data">
-		    <p>公演：<input type="text" name="performance" value="<?php if( !empty($_SESSION['performance']) ){ echo h($_SESSION['performance']); } ?>" required></p>
-		    <p>劇団：<input type="text" name="theatrical_company" value="<?php if( !empty($_SESSION['theatrical_company']) ){ echo h($_SESSION['theatrical_company']); } ?>"></p>
-		    <p>観劇日：<input type="date" name="date" value="<?php if( !empty($_SESSION['date']) ){ echo h($_SESSION['date']); }else{ echo h($now_date); } ?>"></p>
-		    <p>公演時間：<input type="time" name="open_time" value="<?php if( !empty($_SESSION['open_time']) ){ echo h($_SESSION['open_time']); }else{ echo "13:00"; } ?>"> ~
-		                <input type="time" name="close_time" value="<?php if( !empty($_SESSION['close_time']) ){ echo h($_SESSION['close_time']); }else{ echo "16:00"; } ?>"></p>
-		    <p>観劇した劇場：<input type="text" name="theater" value="<?php if( !empty($_SESSION['theater']) ){ echo h($_SESSION['theater']); } ?>"></p>
-		    <p>座席：<input type="text" name="seat" value="<?php if(!empty($_SESSION['seat'])){ echo h($_SESSION['seat']); } ?>"></p>
-		    <p>公演期間：<input type="date" name="first_date" value="<?php if( !empty($_SESSION['first_date']) ){ echo h($_SESSION['first_date']); } ?>"> ~
-		                <input type="date" name="final_date" value="<?php if( !empty($_SESSION['final_date']) ){ echo h($_SESSION['final_date']); } ?>"></p>
-		    <p>主催：<input type="text" name="organizer" value="<?php if( !empty($_SESSION['organizer']) ){ echo h($_SESSION['organizer']); } ?>"></p>
-		    <p>演出：<input type="text" name="director" value="<?php if( !empty($_SESSION['director']) ){ echo h($_SESSION['director']); } ?>"></p>
-		    <p>作家：<input type="text" name="author" value="<?php if( !empty($_SESSION['author']) ){ echo h($_SESSION['author']); } ?>"></p>
-		    <p>振付：<input type="text" name="dance" value="<?php if( !empty($_SESSION['dance']) ){ echo h($_SESSION['dance']); } ?>"></p>
-            <p>音楽：<input type="text" name="music" value="<?php if( !empty($_SESSION['music']) ){ echo h($_SESSION['music']); } ?>"></p>
-            <p>作詞：<input type="text" name="lyrics" value="<?php if( !empty($_SESSION['lyrics']) ){ echo h($_SESSION['lyrics']); } ?>"></p>
-		    <p>衣装：<input type="text" name="costume" value="<?php if( !empty($_SESSION['costume']) ){ echo h($_SESSION['costume']); } ?>"></p>
-		    <p>照明：<input type="text" name="illumination" value="<?php if( !empty($_SESSION['illumination']) ){ echo h($_SESSION['illumination']); } ?>"></p>
-		    <p>小道具：<input type="text" name="property" value="<?php if( !empty($_SESSION['property']) ){ echo h($_SESSION['property']); } ?>"></p>
-		    <p>出演者：</p>
-            <div id='all_players_area'>
-                <?php for($i=0; $i<$players_number+1; $i++){ ?>
-                    <p id='player_area_<?php echo $i; ?>'>
-                        <input type="text" name="player[]" id="player_<?php echo $i; ?>" onkeyup="checkPlayer()" value="<?php if(!empty($_SESSION['player'][$i]) ){echo h($_SESSION['player'][$i]); }?>">
-                    </p>           
-                <?php } ?>
-                </div>
-            <input type="button" id="add_player" value='+' onclick="addPlayer()">
-            <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
-                    
-			<p>あらすじ：<textarea name="scenario" value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea></p>
-			<p>全体について思うこと：<textarea name="impression_all" value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea></p>
-
-            <p>出演者に対する感想</p>
-            <div id='all_impressions_player_area'>
-                <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
-                    <p id='impression_area_<?php echo $i; ?>'>
-                        出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
-                                    <?php if(isset($_SESSION['drop_select_impression_players'])){
-                                        echo $_SESSION['drop_select_impression_players'][$i];
-                                    }else{
-                                        echo $_SESSION['drop_impression_players'];
-                                    } ?>
-                               </select>
-			            出演者に対するコメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
-                    </p>
-                <?php } ?>                
+                <!-- page1 登録画面 -->
+                <?php if(count($errors) > 0):?>
+                <?php foreach($errors as $value){
+                    echo "<p class='error'>".$value."</p>";
+                } ?>
+                <?php endif; ?>
+                <?php elseif($flag === 1 || isset($_POST['btn_back'])): ?>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <label>
+                        <input type='checkbox' class='add-book-page-area-input' checked disabled>
+                        <span class='page page-add page-right' style='z-index:200;'></span>
+                        <span class='page page-add page-left page-add-first-left'>
+                            <ul class='note note-add'>                    
+     		                    <li>公演：<input type="text" name="performance" value="<?php if( !empty($_SESSION['performance']) ){ echo h($_SESSION['performance']); } ?>" required></li>
+                 	    	    <li>劇団：<input type="text" name="theatrical_company" value="<?php if( !empty($_SESSION['theatrical_company']) ){ echo h($_SESSION['theatrical_company']); } ?>"></li>
+	    	                    <li>観劇日：<input type="date" name="date" value="<?php if( !empty($_SESSION['date']) ){ echo h($_SESSION['date']); }else{ echo h($now_date); } ?>"></li>
+            	    	        <li>公演時間：<input type="time" name="open_time" value="<?php if( !empty($_SESSION['open_time']) ){ echo h($_SESSION['open_time']); }else{ echo "13:00"; } ?>"> ~
+		                                     <input type="time" name="close_time" value="<?php if( !empty($_SESSION['close_time']) ){ echo h($_SESSION['close_time']); }else{ echo "16:00"; } ?>"></li>
+             	    	        <li>劇場：<input type="text" name="theater" value="<?php if( !empty($_SESSION['theater']) ){ echo h($_SESSION['theater']); } ?>"></li>
+         		                <li>座席：<input type="text" name="seat" value="<?php if(!empty($_SESSION['seat'])){ echo h($_SESSION['seat']); } ?>"></;>
+                 		        <li>期間：<input type="date" name="first_date" class='add-period' value="<?php if( !empty($_SESSION['first_date']) ){ echo h($_SESSION['first_date']); } ?>"> ~
+		                                  <input type="date" name="final_date" class='add-period' value="<?php if( !empty($_SESSION['final_date']) ){ echo h($_SESSION['final_date']); } ?>"></li>
+             	        	    <li>主催：<input type="text" name="organizer" value="<?php if( !empty($_SESSION['organizer']) ){ echo h($_SESSION['organizer']); } ?>"></li>
+	    	                    <li>演出：<input type="text" name="director" value="<?php if( !empty($_SESSION['director']) ){ echo h($_SESSION['director']); } ?>"></li>
+            		            <li>作家：<input type="text" name="author" value="<?php if( !empty($_SESSION['author']) ){ echo h($_SESSION['author']); } ?>"></li>
+    	         	            <li>振付：<input type="text" name="dance" value="<?php if( !empty($_SESSION['dance']) ){ echo h($_SESSION['dance']); } ?>"></li>
+                                <li>音楽：<input type="text" name="music" value="<?php if( !empty($_SESSION['music']) ){ echo h($_SESSION['music']); } ?>"></li>
+                                <li>作詞：<input type="text" name="lyrics" value="<?php if( !empty($_SESSION['lyrics']) ){ echo h($_SESSION['lyrics']); } ?>"></li>
+         	     	            <li>衣装：<input type="text" name="costume" value="<?php if( !empty($_SESSION['costume']) ){ echo h($_SESSION['costume']); } ?>"></li>
+		                        <li>照明：<input type="text" name="illumination" value="<?php if( !empty($_SESSION['illumination']) ){ echo h($_SESSION['illumination']); } ?>"></li>
+                     		    <li>小道具：<input type="text" name="property" value="<?php if( !empty($_SESSION['property']) ){ echo h($_SESSION['property']); } ?>"></li>
+                            </ul>
+                        </span>
+                    </label>
+                    <label>
+                        <input type='checkbox' class='add-book-page-area-input'>
+                        <span  class='page page-add page-right' style='z-index:100;'>
+                            <ul class='note note-add'>
+                                <li>出演者：</li>
+                                <div id='all_players_area'>
+                                    <?php for($i=0; $i<$players_number+1; $i++){ ?>
+                                    <li id='player_area_<?php echo $i; ?>'>
+                                        <input type="text" name="player[]" id="player_<?php echo $i; ?>" onkeyup="checkPlayer()" value="<?php if(!empty($_SESSION['player'][$i]) ){echo h($_SESSION['player'][$i]); }?>">
+                                    </li>           
+                                    <?php } ?>
+                                </div>
+                                <li>
+                                    <input type="button" id="add_player" value='+' onclick="addPlayer()">
+                                    <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
+                                </li>
+                    			<li>あらすじ：<textarea name="scenario" value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea></li>
+                    			<li>全体について思うこと：<textarea name="impression_all" value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea></li>
+                                <li>出演者に対する感想</li>
+                                <div id='all_impressions_player_area'>
+                                    <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
+                                    <li id='impression_area_<?php echo $i; ?>'>
+                                        出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
+                                        <?php if(isset($_SESSION['drop_select_impression_players'])){
+                                            echo $_SESSION['drop_select_impression_players'][$i];
+                                        }else{
+                                            echo $_SESSION['drop_impression_players'];
+                                        } ?>
+                                               </select>
+			                            出演者に対するコメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
+                                    </li>
+                                    <?php } ?>                
+                                </div>
+                                <li>
+                                    <input type="button" id="add_impression_player" value='+' onclick="addImpression_Player()">
+                                    <input type="button" id="disp_impression_player" value='-' onclick="dispImpression_Player()">
+                                </li>
+                     			<li>好きな場面とその理由</li>
+                                <div id='all_impressions_scene_area'>
+                                    <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
+                                    <li id='impression_scene_area_<?php echo $i; ?>'>
+                                        <input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
+                                        <textarea name="impression_scene[]" value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
+                                    </li>
+                                    <?php } ?>                                        
+                                </div>
+                                <li>
+                                    <input type="button" id="add_impression_scene" type="button" value='+' onclick="addImpression_Scene()">
+                                    <input type="button" id="disp_impression_scene" value='-' onclick="dispImpression_Scene()">
+                                </li>
+                    	   		<li>最後に：<textarea name="impression_final" value="<?php if( !empty($_SESSION['impression_final']) ){ echo h($_SESSION['impression_final']); } ?>"></textarea></li>
+                	      		<li>関連のある公演：</li>
+                                <div id='all_related_performances_area'>
+                                    <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
+                                    <li id='related_performance_area_<?php echo $i; ?>'>
+	     	         	                <select name='related_performances[]' id='related_performances_<?php echo $i; ?>'>
+                                            <?php if(isset($_SESSION['drop_select_related_performances'])){
+                                                echo $_SESSION['drop_select_related_performances'][$i];
+                                            }else{
+                                                echo $_SESSION['drop_related_performances'];
+                                            } ?>
+                                        </select>
+                                    </li>
+                                    <?php } ?>                
+                                </div>
+                                <li>
+                                    <input type="button" id="add_related_performance" value="+" onclick="addRelated_Performance()">
+                                    <input type="button" id="disp_related_performance" value="-" onclick="dispRelated_Performance()"><br>
+                                </li>    
+                                <li>
+                                    <input type="submit" name="btn_confirm" value="確認する">
+                                </li>            
+                            </ul>
+                        </span>
+                        <span class='page page-add page-left'></span>
+                    </label>
+		        </form>
+	            <?php endif; ?>
             </div>
-			<input type="button" id="add_impression_player" value='+' onclick="addImpression_Player()">
-            <input type="button" id="disp_impression_player" value='-' onclick="dispImpression_Player()">
-                    
-			<p>好きな場面とその理由</p>
-            <div id='all_impressions_scene_area'>
-                <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
-                    <p id='impression_scene_area_<?php echo $i; ?>'>
-                        <input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
-                        <textarea name="impression_scene[]" value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
-                    </p>
-                <?php } ?>                                        
-            </div>                    
-	   		<input type="button" id="add_impression_scene" type="button" value='+' onclick="addImpression_Scene()">
-            <input type="button" id="disp_impression_scene" value='-' onclick="dispImpression_Scene()">
-
-	   		<p>最後に：<textarea name="impression_final" value="<?php if( !empty($_SESSION['impression_final']) ){ echo h($_SESSION['impression_final']); } ?>"></textarea></p>
-	   		<p>関連のある公演：</p>
-            <div id='all_related_performances_area'>
-                <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
-                    <p id='related_performance_area_<?php echo $i; ?>'>
-	   		            <select name='related_performances[]' id='related_performances_<?php echo $i; ?>'>
-                           <?php if(isset($_SESSION['drop_select_related_performances'])){
-                                        echo $_SESSION['drop_select_related_performances'][$i];
-                                    }else{
-                                        echo $_SESSION['drop_related_performances'];
-                                    } ?>
-                        </select>
-                    </p>
-                <?php } ?>                
-            </div>                        
-            <input type="button" id="add_related_performance" value="+" onclick="addRelated_Performance()">
-            <input type="button" id="disp_related_performance" value="-" onclick="dispRelated_Performance()"><br>
-                   
-            <input type="submit" name="btn_confirm" value="確認する"><br>
-        </form>
-        <p><form method='post' name='return_home' action='m6-indivisual-home.php'>
+        </div>
+        <form method='post' name='return_home' action='m6-indivisual-home.php'>
             <a href="m6-indivisual-home.php" onClick="document.return_home.submit();return false">ホーム</a>
             <input type='hidden' name='return_home_index'>
-        </form></p>
-	<?php endif; ?>
+        </form>
+    </div>
  
 	<script>
         let all_players_area = document.getElementById('all_players_area');
