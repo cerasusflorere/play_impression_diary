@@ -49,7 +49,7 @@
     $impression_scenes_number = 0; // 入力されている好き場面数
     $related_performances_number = 0; // 選択されている関連のある公演数
     $drop_select_impression_players = []; // 出演者の感想用の出演者のドロップダウンメニュー（既に出演者の感想で選択された出演者がいる場合）（確認時に使用）
-    $drop_impression_players = '<option hidden>選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
+    $drop_impression_players = '<option value="">選択してください</option>'; // 出演者の感想用の出演者のドロップダウンメニュー（出演者の感想で選択された出演者がいない場合と新たに選択する用）
     $drop_select_related_performances = []; // 関連のある公演用のドロップダウンメニュー
     $drop_related_performances = '<option value="">選択してください</option>'; // 関連のある公演用のドロップダウンメニュー（選択された公演がない場合と新たに選択する用）
 
@@ -453,7 +453,7 @@
                     <label>
                         <input type='checkbox' class='add-book-page-area-input' checked disabled>
                         <span class='page page-add page-right' style='z-index:200;'></span>
-                        <span class='page page-add page-left page-add-first-left'>
+                        <span id='page_1' class='page page-add page-left page-add-first-left'>
                             <ul class='note note-add'>                    
      		                    <li>公演：<input type="text" name="performance" value="<?php if( !empty($_SESSION['performance']) ){ echo h($_SESSION['performance']); } ?>" required></li>
                  	    	    <li>劇団：<input type="text" name="theatrical_company" value="<?php if( !empty($_SESSION['theatrical_company']) ){ echo h($_SESSION['theatrical_company']); } ?>"></li>
@@ -478,7 +478,7 @@
                     </label>
                     <label>
                         <input type='checkbox' class='add-book-page-area-input'>
-                        <span  class='page page-add page-right' style='z-index:100;'>
+                        <span  id='page_2' class='page page-add page-right' style='z-index:100;'>
                             <ul class='note note-add'>
                                 <li>出演者：</li>
                                 <div id='all_players_area'>
@@ -492,53 +492,66 @@
                                     <input type="button" id="add_player" value='+' onclick="addPlayer()">
                                     <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
                                 </li>
-                    			<li>
-                                    <div class='add-textarea-area'>
+                    			<div class='add-set-area'>
+                                    <li class='add-textarea-area'>
                                         あらすじ：<textarea name="scenario" class='add-textarea' value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea>
-                                    </div>    
-                                </li>
-                                <li></li>
-                    			<li>
-                                    <div class='add-textarea-area'>
+                                    </li>
+                                    <li></li>
+                                </div>                                
+                    			<div class='add-set-area'>
+                                    <li class='add-textarea-area'>
                                         全体について：<textarea name="impression_all" class='add-textarea' value="<?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?>"><?php if( !empty($_SESSION['impression_all']) ){ echo h($_SESSION['impression_all']); } ?></textarea>
-                                    </div>
-                                </li>
-                                <li></li>
-                                <li>出演者に対する感想</li>
-                                <div id='all_impressions_player_area'>
-                                    <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
-                                    <div id='impression_area_<?php echo $i; ?>'>
-                                        <li>
-                                            出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
-                                            <?php if(isset($_SESSION['drop_select_impression_players'])){
-                                                echo $_SESSION['drop_select_impression_players'][$i];
-                                            }else{
-                                                echo $_SESSION['drop_impression_players'];
-                                            } ?>
-                                            </select>
-                                        </li>
-			                            <li>
-                                            <div class='add-textarea-area'>
-                                                コメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' class='add-textarea' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
-                                            </div>
-                                        </li>
-                                        <li></li>
-                                    </div>
-                                    <?php } ?>                
+                                    </li>
+                                    <li></li>
                                 </div>
-                                <li>
-                                    <input type="button" id="add_impression_player" value='+' onclick="addImpression_Player()">
-                                    <input type="button" id="disp_impression_player" value='-' onclick="dispImpression_Player()">
-                                </li>
-                     			<li>好きな場面とその理由</li>
+                                <div class='add-set-all-area'>
+                                    <li>出演者に対する感想：</li>
+                                    <div id='all_impressions_player_area'>
+                                        <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
+                                        <div id='impression_area_<?php echo $i; ?>' class='add-set-area'>
+                                            <li>
+                                                出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
+                                                <?php if(isset($_SESSION['drop_select_impression_players'])){
+                                                    echo $_SESSION['drop_select_impression_players'][$i];
+                                                }else{
+                                                   echo $_SESSION['drop_impression_players'];
+                                                } ?>
+                                                </select>
+                                            </li>
+	    		                            <li>
+                                                <div class='add-textarea-area'>
+                                                    コメント：<textarea name="impression_player[]" id='impression_player_<?php echo $i; ?>' class='add-textarea' value="<?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?>"><?php if( !empty($_SESSION['impression_player'][$i]) ){ echo h($_SESSION['impression_player'][$i]); } ?></textarea>
+                                                </div>
+                                            </li>
+                                            <li></li>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                    <li>
+                                        <input type="button" id="add_impression_player" value='+' onclick="addImpression_Player()">
+                                        <input type="button" id="disp_impression_player" value='-' onclick="dispImpression_Player()">
+                                    </li>
+                                </div>                            
+                                
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>            
+                            </ul>
+                        </span>
+                        <span id='page_3' class='page page-add page-left'>
+                            <ul class='note note-add'>
+                            <li>好きな場面とその理由：</li>
                                 <div id='all_impressions_scene_area'>
                                     <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
-                                    <div id='impression_scene_area_<?php echo $i; ?>'>
+                                    <div id='impression_scene_area_<?php echo $i; ?>' class='add-set-area'>
                                         <li>
-                                            <input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
+                                            場面：<input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
                                         </li>
                                         <li>
-                                            <textarea name="impression_scene[]" class='add-textarea' value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
+                                            <div class='add-textarea-area'>
+                                                コメント：<textarea name="impression_scene[]" class='add-textarea' value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
+                                            </div>                                            
                                         </li>
                                         <li></li>
                                     </div>
@@ -548,12 +561,12 @@
                                     <input type="button" id="add_impression_scene" type="button" value='+' onclick="addImpression_Scene()">
                                     <input type="button" id="disp_impression_scene" value='-' onclick="dispImpression_Scene()">
                                 </li>
-                    	   		<li>
-                                    <div class='add-textarea-area'>
+                    	   		<div class='add-set-area'>
+                                    <li class='add-textarea-area'>
                                         最後に：<textarea name="impression_final" class='add-textarea' value="<?php if( !empty($_SESSION['impression_final']) ){ echo h($_SESSION['impression_final']); } ?>"></textarea>
-                                    </div>
-                                </li>
-                                <li></li>
+                                    </li>
+                                    <li></li>
+                                </div>                                
                 	      		<li>関連のある公演：</li>
                                 <div id='all_related_performances_area'>
                                     <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
@@ -574,10 +587,14 @@
                                 </li>    
                                 <li>
                                     <input type="submit" name="btn_confirm" value="確認する">
-                                </li>            
+                                </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
                             </ul>
                         </span>
-                        <span class='page page-add page-left'></span>
                     </label>
 		        </form>
 	            <?php endif; ?>
@@ -643,20 +660,66 @@
 
         // 出演者 追加
         // フォーム追加
-        function addPlayer(){        
-            current_player_number++; // id
-            const formerNumber = current_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
-            // 要素をコピーする
-            let copied = all_players_area.firstElementChild.cloneNode(true);
-            copied.id = 'player_area_' + current_player_number; // コピーした要素のidを変更
-            // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-            all_players_area.appendChild(copied);
-            // 出演者のnameを取得する     
-            var copied_player_names = document.getElementsByName('player[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 出演者のidを変更する
-            const new_player_id = 'player_' + current_player_number; // 新しいplayerのid、文字＋計算はできない
-            copied_player_names[(copied_player_names.length)-1].id = new_player_id; // 出演者のidを変更
-            copied_player_names[(copied_player_names.length)-1].value = '';
+        function addPlayer(){            
+            if(current_player_number < 49){
+                //const span_id_li = '#'+ event.path[3].id +' li'; // どのspanにあるのか
+                //const page_li_number = document.querySelectorAll(span_id_li).length + 1; // span内のliの数(+した後)
+                const span = document.getElementById(event.path[3].id); // 出演者追加ボタンのあるspan
+                const span_id_li_last = '#'+ event.path[3].id +' li:last-child';  // 出演者追加ボタンのspanの最後のliを取得するための引数
+                const last_li = document.querySelectorAll(span_id_li_last); // 出演者追加ボタンのspan内の最後のli
+                if(event.path[1] == last_li[last_li.length-1]){
+
+                }else{
+                    current_player_number++; // id
+                    const formerNumber = current_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
+                    // 要素をコピーする
+                    let copied = all_players_area.firstElementChild.cloneNode(true);
+                    copied.id = 'player_area_' + current_player_number; // コピーした要素のidを変更
+                
+                    // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                    all_players_area.appendChild(copied);
+                    // 出演者のnameを取得する     
+                    var copied_player_names = document.getElementsByName('player[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                    // 出演者のidを変更する
+                    const new_player_id = 'player_' + current_player_number; // 新しいplayerのid、文字＋計算はできない
+                    copied_player_names[(copied_player_names.length)-1].id = new_player_id; // 出演者のidを変更
+                    copied_player_names[(copied_player_names.length)-1].value = '';
+
+                    if(last_li[last_li.length-1].parentElement.className == 'note note-add'){
+                        // 出演者追加ボタンのあるspan内の最後のliが調整用liの場合
+                        last_li[last_li.length-1].remove(); // 出演者追加ボタンのあるspan内の最後のliを削除
+                    }else{
+                        // 出演者追加ボタンのあるspan内の最後のidが調整用li出ない場合
+                        const span_id_add_set_area_last = '#'+ event.path[3].id +' .add-set-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-areaクラスを取得するための引数
+                        const last_add_set_area = document.querySelectorAll(span_id_add_set_area_last); // 出演者追加ボタンのspan内の最後のadd-set-areaクラス
+                        const add_set_area_number = last_add_set_area[0].id.replace(/[^0-9]/g, ''); // class=add-set-areaの中で一番最後のidの番号を取得する
+                        if(add_set_area_number == 0 && add_set_area_number != ''){
+                            // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合
+                            const span_id_add_set_all_area_last = '#'+ event.path[3].id +' .add-set-all-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-all-areaクラスを取得するための引数
+                            const last_add_set_all_area = document.querySelectorAll(span_id_add_set_all_area_last); // 出演者追加ボタンのspan内の最後のadd-set-all-areaクラス
+                            last_add_set_all_area[0].remove();
+                            const last_add_set_all_area_id_li_s = last_add_set_all_area[0].getElementsByTagName('li'); // add-set-all-areaクラス内のli
+                            for(let i=1; i<last_add_set_all_area_id_li_s.length; i++){
+                                const li = document.createElement('li');
+                                const ul = span.children;
+                                ul.item(0).appendChild(li);
+                            }
+                        }else{
+                            //上記以外の場合
+                            last_add_set_area[0].remove();
+                            const last_add_set_area_id_li_s = last_add_set_area[0].getElementsByTagName('li'); // add-set-areaクラス内のli
+                            for(let i=1; i<last_add_set_area_id_li_s.length; i++){
+                                const li = document.createElement('li');
+                                const ul = span.children;
+                                ul.item(0).appendChild(li);
+                            }
+                        }
+                    }        
+                }                       
+            }else{
+                // 出演者追加ボタンのあるspan内の最後のliが調整用liでない場合
+                alert('出演者の登録は50人までです。');
+            }                
         }
         // フォーム削除
         function dispPlayer(){
@@ -712,26 +775,30 @@
 
         // 好きな場面とその理由 追加
         // フォーム追加
-        function addImpression_Scene(){        
-            current_impression_scene_number++; // id
-            const formerNumber = current_impression_scene_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
-            // 要素をコピーする
-            let copied = all_impressions_scene_area.firstElementChild.cloneNode(true);
-            copied.id = 'impression_scene_area_' + current_impression_scene_number; // コピーした要素のidを変更
-            // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-            all_impressions_scene_area.appendChild(copied);
-            // 好きな場面のnameを取得する     
-            var copied_scene_impression_names = document.getElementsByName('scene_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 好きな場面のidを変更する
-            const new_scene_impression_id = 'scene_impression_' + current_impression_scene_number; // 好きな場面のid、文字＋計算はできない
-            copied_scene_impression_names[(copied_scene_impression_names.length)-1].id = new_scene_impression_id; // 好きな場面のidを変更
-            copied_scene_impression_names[(copied_scene_impression_names.length)-1].value = '';
-            // 感想のnameを取得する     
-            var copied_impression_scene_names = document.getElementsByName('impression_scene[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-            // 感想のidを変更する
-            const new_impression_scene_id = 'impression_scene_' + current_impression_scene_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-            copied_impression_scene_names[(copied_impression_scene_names.length)-1].id = new_impression_scene_id; // 出演者のidを変更
-            copied_impression_scene_names[(copied_impression_scene_names.length)-1].value = '';
+        function addImpression_Scene(){
+            if(current_impression_scene_number < 49){
+                current_impression_scene_number++; // id
+                const formerNumber = current_impression_scene_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
+                // 要素をコピーする
+                let copied = all_impressions_scene_area.firstElementChild.cloneNode(true);
+                copied.id = 'impression_scene_area_' + current_impression_scene_number; // コピーした要素のidを変更
+                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                all_impressions_scene_area.appendChild(copied);
+                // 好きな場面のnameを取得する     
+                var copied_scene_impression_names = document.getElementsByName('scene_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                // 好きな場面のidを変更する
+                const new_scene_impression_id = 'scene_impression_' + current_impression_scene_number; // 好きな場面のid、文字＋計算はできない
+                copied_scene_impression_names[(copied_scene_impression_names.length)-1].id = new_scene_impression_id; // 好きな場面のidを変更
+                copied_scene_impression_names[(copied_scene_impression_names.length)-1].value = '';
+                // 感想のnameを取得する     
+                var copied_impression_scene_names = document.getElementsByName('impression_scene[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                // 感想のidを変更する
+                const new_impression_scene_id = 'impression_scene_' + current_impression_scene_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
+                copied_impression_scene_names[(copied_impression_scene_names.length)-1].id = new_impression_scene_id; // 出演者のidを変更
+                copied_impression_scene_names[(copied_impression_scene_names.length)-1].value = '';
+            }else{
+                alert('好きな場面の登録は50個までです。');
+            }                    
         }
         // フォーム削除
         function dispImpression_Scene(){
