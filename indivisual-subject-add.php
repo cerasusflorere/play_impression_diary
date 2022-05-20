@@ -481,7 +481,7 @@
                         <span  id='page_2' class='page page-add page-right' style='z-index:100;'>
                             <ul class='note note-add'>
                                 <li>出演者：</li>
-                                <div class='all_players_area'>
+                                <div class='all-players-area'>
                                     <?php for($i=0; $i<$players_number+1; $i++){ ?>
                                     <li id='player_area_<?php echo $i; ?>'>
                                         <input type="text" name="player[]" id="player_<?php echo $i; ?>" onkeyup="checkPlayer()" value="<?php if(!empty($_SESSION['player'][$i]) ){echo h($_SESSION['player'][$i]); }?>">
@@ -506,7 +506,7 @@
                                 </div>
                                 <div class='add-set-all-area'>
                                     <li>出演者に対する感想：</li>
-                                    <div id='all_impressions_player_area'>
+                                    <div class='all-impressions-player-area'>
                                         <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
                                         <div id='impression_area_<?php echo $i; ?>' class='add-set-area'>
                                             <li>
@@ -543,7 +543,7 @@
                             <ul class='note note-add'>
                                 <div class='add-set-all-area'>
                                     <li>好きな場面とその理由：</li>
-                                        <div id='all_impressions_scene_area'>
+                                        <div class='all-impressions-scene-area'>
                                         <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
                                             <div id='impression_scene_area_<?php echo $i; ?>' class='add-set-area'>
                                                 <li>
@@ -572,9 +572,9 @@
                                 </div>
                                 <div class='add-set-all-area'>
                                     <li>関連のある公演：</li>
-                                        <div id='all_related_performances_area'>
+                                        <div class='all-related-performances-area'>
                                             <?php for($i=0; $i<$related_performances_number+1; $i++){ ?>
-                                            <li id='related_performance_area_<?php echo $i; ?>'>
+                                            <li id='related_performance_area_<?php echo $i; ?>' class='add-set-area'>
 	     	         	                        <select name='related_performances[]' id='related_performances_<?php echo $i; ?>'>
                                                 <?php if(isset($_SESSION['drop_select_related_performances'])){
                                                     echo $_SESSION['drop_select_related_performances'][$i];
@@ -582,7 +582,7 @@
                                                     echo $_SESSION['drop_related_performances'];
                                                 } ?>
                                                 </select>
-                                            </li>
+                                            </li>                
                                             <?php } ?>                
                                         </div>
                                     <li>
@@ -613,9 +613,6 @@
     </div>
  
 	<script>
-        let all_impressions_player_area = document.getElementById('all_impressions_player_area');
-        let all_related_performances_area = document.getElementById('all_related_performances_area');
-
         let select_players = [].slice.call(document.querySelectorAll('[id^="player_impression"]')); // 出演者を入力したら、出演者のプルダウンメニューが増える。
         // フォーム追加
         let current_player_number = JSON.parse('<?php echo $send_players_number; ?>'); // 出演者の最後のid番号
@@ -665,8 +662,6 @@
 
         // フォーム追加時にページをまたいでフォーム移動
         function moveElement(element, span_id_former, element_count, area_number){
-            console.log(element);
-            console.log(span_id_former);
             const span_id_former_number = Number(span_id_former.replace(/[^0-9]/g, '')); // class=add-set-areaの中で一番最後のidの番号を取得する
             const span_id_newer_number = span_id_former_number + 1;
             const span_id_new = 'page_' + span_id_newer_number;
@@ -718,49 +713,16 @@
                     // 最後のliが調整用の場合
                     lis[lis.length-i].remove(); // span内の最後のliを削除
                 }else{
-                    // 出演者追加ボタンのあるspan内の最後のidが調整用li出ない場合
-                    const span_id_add_set_area_last = '#'+ span_id_new +' .add-set-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-areaクラスを取得するための引数
+                    // 出演者追加ボタンのあるspan内の最後のidが調整用liでない場合
+                    const span_id_add_set_area_last = '#'+ span_id_new +' .add-set-area';  // 出演者追加ボタンのspanの最後のadd-set-areaクラスを取得するための引数
                     const last_add_set_area = document.querySelectorAll(span_id_add_set_area_last); // 出演者追加ボタンのspan内の最後のadd-set-areaクラス
-                        
-                    const add_set_area_number = last_add_set_area[0].id.replace(/[^0-9]/g, ''); // class=add-set-areaの中で一番最後のidの番号を取得する
-                    if(add_set_area_number === undefined){
-                        console.log('A');
-                    }
-                    if(add_set_area_number != 0 || add_set_area_number == ''){
-                        //上記以外の場合
-                        last_add_set_area_parent_id = last_add_set_area[0].parentElement.id;
-                        last_add_set_area[0].remove();
-                        const last_add_set_area_id_li_s = last_add_set_area[0].getElementsByTagName('li'); // add-set-areaクラス内のli
-                        for(let i=1; i<last_add_set_area_id_li_s.length; i++){
-                            const li = document.createElement('li');
-                            const ul = span.children;
-                            ul.item(0).appendChild(li);
-                        }
-                        if(last_add_set_area_parent_id == ''){
-                            moveElement(last_add_set_area[0], span_id_new, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
-                        }else{
-                            moveElement(last_add_set_area[0], span_id_new, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
-                        }   
-                    }else{
-                        // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合
-                        const span_id_add_set_all_area_last = '#'+ span_id_new +' .add-set-all-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-all-areaクラスを取得するための引数
-                        const last_add_set_all_area = document.querySelectorAll(span_id_add_set_all_area_last); // 出演者追加ボタンのspan内の最後のadd-set-all-areaクラス
-                        console.log(last_add_set_all_area[0]);
-                        last_add_set_all_area[0].remove();
-                        const last_add_set_all_area_id_li_s = last_add_set_all_area[0].getElementsByTagName('li'); // add-set-all-areaクラス内のli
-                        for(let i=1; i<last_add_set_all_area_id_li_s.length; i++){
-                            const li = document.createElement('li');
-                            const ul = span.children;
-                            ul.item(0).appendChild(li);
-                        }
-                        moveElement(last_add_set_all_area[0], span_id_new, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
-                    }
+
+                    const add_set_area_number = last_add_set_area[last_add_set_area.length-1].id.replace(/[^0-9]/g, ''); // class=add-set-areaの中で一番最後のidの番号を取得する
                     
-                    if(add_set_area_number == 0 && add_set_area_number != '' && add_set_area_number != undefined){
-                        // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合
+                    if(add_set_area_number === String(0)){
+                        // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合の最初（idが0）である場合
                         const span_id_add_set_all_area_last = '#'+ span_id_new +' .add-set-all-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-all-areaクラスを取得するための引数
                         const last_add_set_all_area = document.querySelectorAll(span_id_add_set_all_area_last); // 出演者追加ボタンのspan内の最後のadd-set-all-areaクラス
-                        console.log(last_add_set_all_area[0]);
                         last_add_set_all_area[0].remove();
                         const last_add_set_all_area_id_li_s = last_add_set_all_area[0].getElementsByTagName('li'); // add-set-all-areaクラス内のli
                         for(let i=1; i<last_add_set_all_area_id_li_s.length; i++){
@@ -771,27 +733,26 @@
                         moveElement(last_add_set_all_area[0], span_id_new, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
                     }else{
                         //上記以外の場合
-                        last_add_set_area_parent_id = last_add_set_area[0].parentElement.id;
-                        last_add_set_area[0].remove();
-                        const last_add_set_area_id_li_s = last_add_set_area[0].getElementsByTagName('li'); // add-set-areaクラス内のli
+                        last_add_set_area_parent_id = last_add_set_area[last_add_set_area.length-1].parentElement.id;
+                        last_add_set_area[last_add_set_area.length-1].remove();
+                        const last_add_set_area_id_li_s = last_add_set_area[last_add_set_area.length-1].getElementsByTagName('li'); // add-set-areaクラス内のli
                         for(let i=1; i<last_add_set_area_id_li_s.length; i++){
                             const li = document.createElement('li');
                             const ul = span.children;
                             ul.item(0).appendChild(li);
                         }
                         if(last_add_set_area_parent_id == ''){
-                            moveElement(last_add_set_area[0], span_id_new, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
+                            moveElement(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
                         }else{
-                            moveElement(last_add_set_area[0], span_id_new, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
-                        }                            
+                            moveElement(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
+                        }                     
                     }
-                }        
+                }
             }
 
             const span_new = document.getElementById(span_id_new);
             const ul_new = span_new.firstElementChild;
             const ul_firstElement = ul_new.firstElementChild;
-            console.log(ul_firstElement);
             
             if(area_number == 0){
                 // ulの最初の子要素として追加                
@@ -801,7 +762,7 @@
                 // ここから編集
             }else{
                 // ulの2番目の子要素として追加
-                
+                ul_firstElement.parentNode.insertBefore(element, ul_firstElement.nextSibling);
             }
         }
 
@@ -809,7 +770,7 @@
         // フォーム追加
         function addPlayer(){            
             if(current_player_number < 49){
-                const all_players_area_s = document.getElementsByClassName('all_players_area');
+                const all_players_area_s = document.getElementsByClassName('all-players-area');
                 const all_players_area = all_players_area_s[all_players_area_s.length-1]; // 最後のall_players_areaクラス
                 const span = document.getElementById(event.path[3].id); // 出演者追加ボタンのあるspan
                 const span_id_li_last = '#'+ event.path[3].id +' li:last-child';  // 出演者追加ボタンのspanの最後のliを取得するための引数
@@ -827,6 +788,9 @@
                     new_all_players_area.appendChild(copied);
                     moveElement(new_all_players_area, event.path[3].id, 1, 0);
                     moveElement(event.path[1], event.path[3].id, 1, 2); // 2は2番目の子要素として
+
+                    const li = document.createElement('li'); // spanの最後に調整用liを作る
+                    span.children[0].appendChild(li);
                 }else{
                     // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
                     all_players_area.appendChild(copied);
@@ -844,11 +808,10 @@
                         // 出演者追加ボタンのあるspan内の最後のidが調整用li出ない場合
                         const span_id_add_set_area_last = '#'+ event.path[3].id +' .add-set-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-areaクラスを取得するための引数
                         const last_add_set_area = document.querySelectorAll(span_id_add_set_area_last); // 出演者追加ボタンのspan内の最後のadd-set-areaクラス
-                        
+
                         const add_set_area_number = last_add_set_area[0].id.replace(/[^0-9]/g, ''); // class=add-set-areaの中で一番最後のidの番号を取得する
-                        console.log(add_set_area_number);
-                        if(add_set_area_number == 0 && add_set_area_number != ''){
-                            // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合
+                        if(add_set_area_number === String(0)){
+                            // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の最初の子要素である（idが0）の場合
                             const span_id_add_set_all_area_last = '#'+ event.path[3].id +' .add-set-all-area:last-child';  // 出演者追加ボタンのspanの最後のadd-set-all-areaクラスを取得するための引数
                             const last_add_set_all_area = document.querySelectorAll(span_id_add_set_all_area_last); // 出演者追加ボタンのspan内の最後のadd-set-all-areaクラス
                             const last_add_set_all_area_id_li_s = last_add_set_all_area[0].getElementsByTagName('li'); // add-set-all-areaクラス内のli
@@ -885,11 +848,53 @@
         // フォーム削除
         function dispPlayer(){
             if(current_player_number > 0){
-                const all_players_area_s = document.getElementsByClassName('all_players_area');
+                const all_players_area_s = document.getElementsByClassName('all-players-area');
                 const all_players_area = all_players_area_s[all_players_area_s.length-1];
                 const remove_element = all_players_area.children[current_player_number];
                 all_players_area.removeChild(remove_element);
                 current_player_number--;
+                const span_now = document.getElementById(event.path[3].id); // 出演者削除ボタンのあるspan
+                const span_now_li = span_now.children[0].getElementsByTagName('li'); // 出演者追加ボタンのspan内の調整用li
+                let span_now_li_number = 1;
+                for(i=span_now_li.length-1; i > 0; i--){
+                    if(span_now_li[i].innerHTML === ''){
+                        span_now_li_number ++;
+                    }else{
+                        break;
+                    }
+                }
+                const span_now_id_number = Number(event.path[3].id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号
+                const span_next_id_number = span_now_id_number + 1;
+                const span_next = document.getElementById('page_' + span_next_id_number); // 出演者削除ボタンのあるspanの次のspan
+                const span_next_ul_first_childern = span_next.children[0].children[0]; // 出演者削除のあるspanの次のspanの最初のフォーム
+                let want_move_element_li_number; // ページを移動させるかもしれない要素のliの数
+                let want_move_element; // ページを移動させるかもしれない要素
+                if(span_next_ul_first_childern.className == 'add-set-all-area'){
+                    const span_next_ul_first_childern_firstdiv = span_next_ul_first_childern.children[1];
+                    if(span_next_ul_first_childern_firstdiv.childElementCount == 1){
+                        // add-set-all-areaクラス内のフォームセットが1つだけ
+                        want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length; 
+                        want_move_element = span_next_ul_first_childern;
+                    }else{
+                        // add-set-all-areaクラス内のフォームセットが複数の場合は最初のフォームセットだけ
+                        want_move_element_li_number = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
+                        want_move_element = span_next_ul_first_childern_firstdiv;
+                    }
+                }else{
+                    // 次のspanの最初のフォームセットのクラスがadd-set-areaクラスの場合
+                    want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length;
+                    want_move_element = span_next_ul_first_childern;
+                }
+                console.log(span_now_li_number);
+                console.log(want_move_element_li_number);
+                if(span_now_li_number >= want_move_element_li_number){
+                    // 要素を移動させる
+                    moveElement_back(want_move_element, want_move_element_li_number); // これを作る
+                }else{
+                    // 移動させない時は調整用liを追加
+                    const li = document.createElement('li');
+                    span_now.children[0].appendChild(li);
+                }
             }else{
                 alert('フォームが1つの場合には削除できません。');
             }
@@ -899,6 +904,8 @@
         // フォーム追加
         function addImpression_Player(){        
             if(current_player_number > current_impression_player_number){
+                const all_impressions_player_area_s = document.getElementsByClassName('all-impressions-player-area');
+                const all_impressions_player_area = all_impressions_player_area_s[all_impressions_player_area_s.length-1]; // 最後のall_impressions_player_areaクラス
                 current_impression_player_number++; // id
                 const formerNumber = current_impression_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
@@ -940,6 +947,8 @@
         // フォーム追加
         function addImpression_Scene(){
             if(current_impression_scene_number < 49){
+                const all_impressions_scene_area_s = document.getElementsByClassName('all-impressions-scene-area');
+                const all_impressions_scene_area = all_impressions_scene_area_s[all_impressions_scene_area_s.length-1]; // 最後のall_impressions_scene_areaクラス
                 current_impression_scene_number++; // id
                 const formerNumber = current_impression_scene_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
@@ -978,16 +987,18 @@
         // フォーム追加
         function addRelated_Performance(){
             if(current_related_performance_number + 1 < all_performances_number){
+                const all_related_performances_area_s = document.getElementsByClassName('all-related-performances-area');
+                const all_related_performances_area = all_related_performances_area_s[all_related_performances_area_s.length-1]; // 最後のall_related_performances_areaクラス
                 current_related_performance_number++; // id
                 const formerNumber = current_related_performance_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
                 let copied = all_related_performances_area.firstElementChild.cloneNode(true);
-                copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素のidを変更
+                copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素の子要素のidを変更
                 // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
                 all_related_performances_area.appendChild(copied);
-                // 出演者のnameを取得する     
+                // 関連のある公演のnameを取得する     
                 var copied_related_performance_names = document.getElementsByName('related_performances[]'); // 一度name属性を取得して、最後の要素のidを書き換える
-                // 出演者のidを変更する
+                // 関連のある公演のidを変更する
                 const new_related_performance_id = 'related_performances_' + current_related_performance_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
                 copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
                 copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
