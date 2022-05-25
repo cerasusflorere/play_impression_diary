@@ -589,11 +589,14 @@
                                         <input type="button" id="add_related_performance" value="+" onclick="addRelated_Performance()">
                                         <input type="button" id="disp_related_performance" value="-" onclick="dispRelated_Performance()"><br>
                                     </li>
-                                </div>                             
-                	      		    
-                                <li>
-                                    <input type="submit" name="btn_confirm" value="確認する">
-                                </li>
+                                </div>                         
+                	      		
+                                <div class='add-set-area'>
+                                    <li>
+                                        <input type="submit" name="btn_confirm" value="確認する">
+                                    </li>
+                                </div>
+                                
                                 <li></li>
                                 <li></li>
                                 <li></li>
@@ -661,7 +664,7 @@
         }
 
         // フォーム追加時にページをまたいでフォーム移動
-        function moveElement(element, span_id_former, element_count, area_number){
+        function moveElement_forth(element, span_id_former, element_count, area_number){ // 移動させたい要素, 移動前のspanのid, 移動させたい要素の行, ulの何番目の要素とするか
             const span_id_former_number = Number(span_id_former.replace(/[^0-9]/g, '')); // class=add-set-areaの中で一番最後のidの番号を取得する
             const span_id_newer_number = span_id_former_number + 1;
             const span_id_new = 'page_' + span_id_newer_number;
@@ -709,7 +712,7 @@
             const lis = document.querySelectorAll(span_id_li); // 出演者追加ボタンのspan内の最後のli
             
             for(let i=1; i<=element_count; i++){
-                if(lis[16-i].parentElement.className == 'note note-add'){
+                if(lis[16-i].parentElement === span.children[0]){
                     // 最後のliが調整用の場合
                     lis[lis.length-i].remove(); // span内の最後のliを削除
                 }else{
@@ -730,7 +733,7 @@
                             const ul = span.children;
                             ul.item(0).appendChild(li);
                         }
-                        moveElement(last_add_set_all_area[0], span_id_new, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
+                        moveElement_forth(last_add_set_all_area[0], span_id_new, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
                     }else{
                         //上記以外の場合
                         last_add_set_area_parent_id = last_add_set_area[last_add_set_area.length-1].parentElement.id;
@@ -742,9 +745,9 @@
                             ul.item(0).appendChild(li);
                         }
                         if(last_add_set_area_parent_id == ''){
-                            moveElement(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
+                            moveElement_forth(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
                         }else{
-                            moveElement(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
+                            moveElement_forth(last_add_set_area[last_add_set_area.length-1], span_id_new, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
                         }                     
                     }
                 }
@@ -764,6 +767,91 @@
                 // ulの2番目の子要素として追加
                 ul_firstElement.parentNode.insertBefore(element, ul_firstElement.nextSibling);
             }
+        }
+
+        // フォーム削除時にページを跨いでフォーム移動
+        function moveElement_back(element, span_id_origin, element_count, li_start, li_count){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 何行目から削除するか, 削除したいliの数
+            const span_id_origin_number = Number(span_id_origin.replace(/[^0-9]/g, ''));
+            const span_id_forth_number = span_id_origin_number - 1;
+            const span_id_forth = 'page_' + span_id_forth_number; // 前のページのid
+            const span_forth = document.getElementById(span_id_forth); // 前のページ
+            let span_origin = document.getElementById(span_id_origin); // 元々のページ
+            if(span_origin.children[0].children[0].className == ''){
+
+            }
+
+            // 前のページについて
+            let span_forth_li = span_forth.children[0].getElementsByTagName('li'); // 前のページのspan内のli
+            // liを全部消して、後で足すようにする
+            for(i=15; i>=li_start; i--){
+                // 遡らないと番号が変わる               
+                if(span_forth_li[i] !== undefined && span_forth_li[i].parentElement.tagName === 'UL'){
+                    span_forth.children[0].removeChild(span_forth_li[i]);
+                }                
+            }
+            span_forth.children[0].appendChild(element);
+            span_forth_li = span_forth.children[0].getElementsByTagName('li'); // 前のページのspan内のli
+            if(span_forth_li.length != 16){
+                for(i=span_forth_li.length; i< 16; i++){
+                    const li = document.createElement('li');
+                    span_forth.children[0].appendChild(li);
+                }
+            }
+
+            // 元々のページについて
+            const span_id_next_number = span_id_origin_number + 1;
+            const span_id_next = 'page_' + span_id_next_number; // 次のページのid
+            const span_next = document.getElementById(span_id_next); // 次のページのspan
+            let span_origin_li = span_origin.getElementsByTagName('li');
+
+            let span_origin_li_number = li_count; // 元々のページの移動した要素のliの数＋span内の調整用liの数
+            let span_origin_li_start = 0; // 何番目のliから消すか
+            let want_move_element_li_number; // ページを移動させるかもしれない要素のliの数
+            let want_move_element; // ページを移動させるかもしれない要素
+
+            if(span_next !== null){
+                for(i=span_origin_li.length-1; i > 0; i--){
+                    if(span_origin_li[i].innerHTML === '' && span_origin_li[i].parentElement.tagName === 'UL'){ // タグ名を取得すると大文字
+                        console.log(span_origin_li[i]);
+                        span_origin_li_number++;
+                    }else{
+                        span_origin_li_start = i;
+                        break;
+                    }
+                }
+
+                // 編集
+                const span_next_ul_first_childern = span_next.children[0].children[0]; // 次のページのspanの最初のフォーム
+                
+                if(span_next_ul_first_childern.className == 'add-set-all-area'){
+                    const span_next_ul_first_childern_firstdiv = span_next_ul_first_childern.children[1];
+                    if(span_next_ul_first_childern_firstdiv.childElementCount == 1){
+                        // add-set-all-areaクラス内のフォームセットが1つだけ
+                        want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length; 
+                        want_move_element = span_next_ul_first_childern;
+                    }else{
+                        // add-set-all-areaクラス内のフォームセットが複数の場合は最初のフォームセットだけ
+                        want_move_element_li_number = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
+                        want_move_element = span_next_ul_first_childern_firstdiv;
+                    }
+                }else{
+                    // 次のspanの最初のフォームセットのクラスがadd-set-areaクラスの場合
+                    want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length;
+                    want_move_element = span_next_ul_first_childern;
+                }
+            }
+            
+            if(span_next !== null && span_origin_li_number >= want_move_element_li_number){
+                // 要素を移動させる
+                moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_origin_li_start, want_move_element_li_number-1);
+            }else{
+                // 移動させない時は調整用liを追加
+                span_origin_li = span_origin.getElementsByTagName('li');
+                for(i=span_origin_li.length; i<16; i++){
+                    const li = document.createElement('li');
+                    span_origin.children[0].appendChild(li);
+                }
+            }            
         }
 
         // 出演者 追加
@@ -786,8 +874,8 @@
                     const new_all_players_area = document.createElement('div');
                     new_all_players_area.className = 'all-players-area';
                     new_all_players_area.appendChild(copied);
-                    moveElement(new_all_players_area, event.path[3].id, 1, 0);
-                    moveElement(event.path[1], event.path[3].id, 1, 2); // 2は2番目の子要素として
+                    moveElement_forth(new_all_players_area, event.path[3].id, 1, 0);
+                    moveElement_forth(event.path[1], event.path[3].id, 1, 2); // 2は2番目の子要素として
 
                     const li = document.createElement('li'); // spanの最後に調整用liを作る
                     span.children[0].appendChild(li);
@@ -801,7 +889,7 @@
                     copied_player_names[(copied_player_names.length)-1].id = new_player_id; // 出演者のidを変更
                     copied_player_names[(copied_player_names.length)-1].value = '';
 
-                    if(last_li[last_li.length-1].parentElement.className == 'note note-add'){
+                    if(last_li[last_li.length-1].parentElement === span.children[0]){
                         // 出演者追加ボタンのあるspan内の最後のliが調整用liの場合
                         last_li[last_li.length-1].remove(); // 出演者追加ボタンのあるspan内の最後のliを削除
                     }else{
@@ -820,7 +908,7 @@
                                 const ul = span.children;
                                 ul.item(0).appendChild(li);
                             }
-                            moveElement(last_add_set_all_area[0], event.path[3].id, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
+                            moveElement_forth(last_add_set_all_area[0], event.path[3].id, last_add_set_all_area_id_li_s.length, 0); // 0はulの最初の子要素として
                         }else{
                             //上記以外の場合
                             last_add_set_area_parent_id = last_add_set_area[0].parentElement.id;
@@ -832,9 +920,9 @@
                                 ul.item(0).appendChild(li);
                             }
                             if(last_add_set_area_parent_id == ''){
-                                moveElement(last_add_set_area[0], event.path[3].id, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
+                                moveElement_forth(last_add_set_area[0], event.path[3].id, last_add_set_area_id_li_s.length, 0); // 0はulの最初の子要素として
                             }else{
-                                moveElement(last_add_set_area[0], event.path[3].id, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
+                                moveElement_forth(last_add_set_area[0], event.path[3].id, last_add_set_area_id_li_s.length, 1); // 1はadd-set-all-areaクラスの最後の子要素として
                             }
                             
                         }
@@ -849,21 +937,34 @@
         function dispPlayer(){
             if(current_player_number > 0){
                 const all_players_area_s = document.getElementsByClassName('all-players-area');
-                const all_players_area = all_players_area_s[all_players_area_s.length-1];
-                const remove_element = all_players_area.children[current_player_number];
-                all_players_area.removeChild(remove_element);
-                current_player_number--;
+                const all_players_area = all_players_area_s[all_players_area_s.length-1]; 
                 const span_now = document.getElementById(event.path[3].id); // 出演者削除ボタンのあるspan
-                const span_now_li = span_now.children[0].getElementsByTagName('li'); // 出演者追加ボタンのspan内の調整用li
-                let span_now_li_number = 1;
+                const span_now_li = span_now.children[0].getElementsByTagName('li'); // 出演者削除ボタンのspan内のli
+                let span_now_li_number = 1; // 出演者策ボタンのspan内の調整用liの数
+                let span_now_li_start = 0; // 何番目のliから消すか
                 for(i=span_now_li.length-1; i > 0; i--){
-                    if(span_now_li[i].innerHTML === ''){
-                        span_now_li_number ++;
+                    if(span_now_li[i].innerHTML === '' && span_now_li[i].parentElement.tagName === 'UL'){ // タグ名を取得すると大文字
+                        span_now_li_number++;
                     }else{
+                        span_now_li_start = i;
                         break;
                     }
                 }
-                const span_now_id_number = Number(event.path[3].id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号
+
+                const span_now_id_number = Number(event.path[3].id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号                
+
+                if(all_players_area.childElementCount == 1){
+                    // 出演者削除ボタンが2行目
+                    moveElement_back(event.path[1], span_now.id, 1, 1, 16);                   
+                    all_players_area.removeChild(all_players_area);
+                    span_now_li_number++; // 出演者削除ボタンを移動させたから
+                }else{
+                    // 出演者削除ボタンが3行目以降
+                    const remove_element = all_players_area.children[current_player_number-(all_players_area_s.length-1)*13]; // 削除したいフォームはall-players-areaクラスセットの最後のセットの最後のフォームセット
+                    all_players_area.removeChild(remove_element);
+                }
+                
+                current_player_number--;
                 const span_next_id_number = span_now_id_number + 1;
                 const span_next = document.getElementById('page_' + span_next_id_number); // 出演者削除ボタンのあるspanの次のspan
                 const span_next_ul_first_childern = span_next.children[0].children[0]; // 出演者削除のあるspanの次のspanの最初のフォーム
@@ -885,11 +986,9 @@
                     want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length;
                     want_move_element = span_next_ul_first_childern;
                 }
-                console.log(span_now_li_number);
-                console.log(want_move_element_li_number);
                 if(span_now_li_number >= want_move_element_li_number){
                     // 要素を移動させる
-                    moveElement_back(want_move_element, want_move_element_li_number); // これを作る
+                    moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_now_li_start, want_move_element_li_number-1); // これを作る
                 }else{
                     // 移動させない時は調整用liを追加
                     const li = document.createElement('li');
