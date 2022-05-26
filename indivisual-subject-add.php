@@ -797,6 +797,7 @@
                     span_forth.children[0].appendChild(li);
                 }
             }
+            span_origin = document.getElementById(span_id_origin);
 
             // 元々のページについて
             const span_id_next_number = span_id_origin_number + 1;
@@ -812,7 +813,6 @@
             if(span_next !== null){
                 for(i=span_origin_li.length-1; i > 0; i--){
                     if(span_origin_li[i].innerHTML === '' && span_origin_li[i].parentElement.tagName === 'UL'){ // タグ名を取得すると大文字
-                        console.log(span_origin_li[i]);
                         span_origin_li_number++;
                     }else{
                         span_origin_li_start = i;
@@ -845,11 +845,25 @@
                 // 要素を移動させる
                 moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_origin_li_start, want_move_element_li_number-1);
             }else{
+                const span_page_right = document.getElementsByClassName('page-right');
+                for(i=0; i<span_page_right[span_page_right.length-1].children[0].children.length; i++){
+                    if(span_page_right[span_page_right.length-1].children[0].children[i].tagName === 'LI' && span_page_right[span_page_right.length-1].children[0].children[i].innerHTML == ''){
+                        if(i === span_page_right[span_page_right.length-1].children[0].children.length-1){
+                            // 最後の右ページ（page-rightクラスを持つspan）の全ての要素が調整用liの場合
+                            span_page_right[span_page_right.length-1].parentElement.remove();
+                        }
+                        continue;
+                    }else{
+                        break;
+                    }
+                }
                 // 移動させない時は調整用liを追加
-                span_origin_li = span_origin.getElementsByTagName('li');
-                for(i=span_origin_li.length; i<16; i++){
-                    const li = document.createElement('li');
-                    span_origin.children[0].appendChild(li);
+                if(span_origin !== null){
+                    span_origin_li = span_origin.getElementsByTagName('li');
+                    for(i=span_origin_li.length; i<16; i++){
+                        const li = document.createElement('li');
+                        span_origin.children[0].appendChild(li);
+                    }
                 }
             }            
         }
