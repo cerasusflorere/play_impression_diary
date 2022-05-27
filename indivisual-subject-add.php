@@ -508,7 +508,7 @@
                                     <li>出演者に対する感想：</li>
                                     <div class='all-impressions-player-area'>
                                         <?php for($i=0; $i<$impression_players_number+1; $i++){ ?>
-                                        <div id='impression_area_<?php echo $i; ?>' class='add-set-area'>
+                                        <div id='impression_player_area_<?php echo $i; ?>' class='add-set-area'>
                                             <li>
                                                 出演者：<select name='player_impression[]' id='player_impression_<?php echo $i; ?>' onchange="choosePlayer()">
                                                 <?php if(isset($_SESSION['drop_select_impression_players'])){
@@ -770,7 +770,7 @@
         }
 
         // フォーム削除時にページを跨いでフォーム移動
-        function moveElement_back(element, span_id_origin, element_count, li_start, li_count){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 何行目から削除するか, 削除したいliの数
+        function moveElement_back(element, span_id_origin, element_count, li_start, li_count, where_flag){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 何行目から削除するか, 削除したいliの数, 要素をどこにつけるか
             console.log('A');
             const span_id_origin_number = Number(span_id_origin.replace(/[^0-9]/g, ''));
             const span_id_forth_number = span_id_origin_number - 1;
@@ -789,7 +789,14 @@
                     break;
                 }           
             }
-            span_forth.children[0].appendChild(element);
+            if(where_flag == 0){
+                span_forth.children[0].appendChild(element);
+            }else{
+                span_forth.children[0].children[span_forth.children[0].children.length-1].appendChild(element);
+            }
+            
+            
+            
             span_forth_li = span_forth.children[0].getElementsByTagName('li'); // 前のページのspan内のli
             if(span_forth_li.length != 16){
                 for(i=span_forth_li.length; i< 16; i++){
@@ -809,6 +816,7 @@
             let span_origin_li_start = 0; // 何番目のliから消すか
             let want_move_element_li_number; // ページを移動させるかもしれない要素のliの数
             let want_move_element; // ページを移動させるかもしれない要素
+            let next_where_flag = 0; // 要素をどこにつけるか（0=spanに直接、1=add-set-all-areaクラスに）
 
             if(span_next !== null){
                 for(i=span_origin_li.length-1; i > 0; i--){
@@ -832,6 +840,7 @@
                         // add-set-all-areaクラス内のフォームセットが複数の場合は最初のフォームセットだけ
                         want_move_element_li_number = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
                         want_move_element = span_next_ul_first_childern_firstdiv;
+                        next_where_flag = 1;
                     }
                 }else if(span_next_ul_first_childern.className == 'add-set-area'){
                     // 次のspanの最初のフォームセットのクラスがadd-set-areaクラスの場合
@@ -842,7 +851,7 @@
             
             if(span_next !== null && span_origin_li_number >= want_move_element_li_number){
                 // 要素を移動させる
-                moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_origin_li_start, want_move_element_li_number-1);
+                moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_origin_li_start, want_move_element_li_number-1, next_where_flag);
             }else{
                 const span_page_right = document.getElementsByClassName('page-right');
                 for(i=0; i<span_page_right[span_page_right.length-1].children[0].children.length; i++){
@@ -970,7 +979,7 @@
                 if(all_players_area.childElementCount == 1){
                     // 出演者削除ボタンが2行目
                     all_players_area.parentElement.removeChild(event.path[1]);
-                    moveElement_back(event.path[1], span_now.id, 1, 1, 16);
+                    moveElement_back(event.path[1], span_now.id, 1, 1, 16, 0);
                     all_players_area.parentElement.removeChild(all_players_area);
                 }else{
                     // 出演者削除ボタンが3行目以降
@@ -984,6 +993,7 @@
                 const span_next_ul_first_childern = span_next.children[0].children[0]; // 出演者削除のあるspanの次のspanの最初のフォーム
                 let want_move_element_li_number; // ページを移動させるかもしれない要素のliの数
                 let want_move_element; // ページを移動させるかもしれない要素
+                let where_flag = 0; // 移動させたときにどこにつけるか（0=spanに直接、1=add-set-all-areaクラスに）
                 if(span_next_ul_first_childern.className == 'add-set-all-area'){
                     const span_next_ul_first_childern_firstdiv = span_next_ul_first_childern.children[1];
                     if(span_next_ul_first_childern_firstdiv.childElementCount == 1){
@@ -994,6 +1004,7 @@
                         // add-set-all-areaクラス内のフォームセットが複数の場合は最初のフォームセットだけ
                         want_move_element_li_number = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
                         want_move_element = span_next_ul_first_childern_firstdiv;
+                        where_flag = 1;
                     }
                 }else{
                     // 次のspanの最初のフォームセットのクラスがadd-set-areaクラスの場合
@@ -1001,7 +1012,7 @@
                     want_move_element = span_next_ul_first_childern;
                 }
                 if(span_now_li_number >= want_move_element_li_number){
-                    moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_now_li_start, want_move_element_li_number-1);                                       
+                    moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_now_li_start, want_move_element_li_number-1, where_flag);                                       
                 }else if(span_now_id_number == 2 || all_players_area.childElementCount != 1){
                     // 移動させない時は調整用liを追加（page=2またはpage=3以降で入力フォームが1つのとき以外）
                     const li = document.createElement('li');
@@ -1022,7 +1033,7 @@
                 const formerNumber = current_impression_player_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
                 let copied = all_impressions_player_area.firstElementChild.cloneNode(true);
-                copied.id = 'impression_area_' + current_impression_player_number; // コピーした要素のidを変更
+                copied.id = 'impression_player_area_' + current_impression_player_number; // コピーした要素のidを変更
                 // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
                 all_impressions_player_area.appendChild(copied);
                 // 出演者のnameを取得する     
