@@ -974,7 +974,7 @@
                     all_players_area.parentElement.removeChild(all_players_area);
                 }else{
                     // 出演者削除ボタンが3行目以降
-                    const remove_element = all_players_area.children[current_player_number-(all_players_area_s.length-1)*13]; // 削除したいフォームはall-players-areaクラスセットの最後のセットの最後のフォームセット
+                    const remove_element = all_players_area.children[all_players_area.children.length-1]; // 削除したいフォームはall-players-areaクラスセットの最後のセットの最後のフォームセット
                     all_players_area.removeChild(remove_element);
                 }
                 
@@ -1002,8 +1002,8 @@
                 }
                 if(span_now_li_number >= want_move_element_li_number){
                     moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_now_li_start, want_move_element_li_number-1);                                       
-                }else if(all_players_area.childElementCount != 1){
-                    // 移動させない時は調整用liを追加
+                }else if(span_now_id_number == 2 || all_players_area.childElementCount != 1){
+                    // 移動させない時は調整用liを追加（page=2またはpage=3以降で入力フォームが1つのとき以外）
                     const li = document.createElement('li');
                     span_now.children[0].appendChild(li);
                 }
