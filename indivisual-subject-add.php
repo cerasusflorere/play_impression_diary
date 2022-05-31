@@ -821,9 +821,19 @@
                     break;
                 }           
             }
-            if(where_flag == 0){
+            if(where_flag === 0){
+                // ulの最後の要素として
                 span_forth.children[0].appendChild(element);
+            }else if(where_flag === 1){
+                // add-set-all-areaクラスなのadd-set-areaクラスとして
+                if(span_forth.children[0].children[span_forth.children[0].children.length-1].children[0].tagName === 'LI'){
+                    // 表題がある場合(<li>出演者:</li>)
+                    span_forth.children[0].children[span_forth.children[0].children.length-1].children[1].appendChild(element);
+                }else{
+                    span_forth.children[0].children[span_forth.children[0].children.length-1].children[0].appendChild(element);
+                }
             }else{
+                // add-set-all-areaクラスの最後の要素として（ボタン）
                 span_forth.children[0].children[span_forth.children[0].children.length-1].appendChild(element);
             }
             
@@ -1019,28 +1029,29 @@
         function dispPlayer(){
             if(current_player_number > 0){
                 const all_players_area_s = document.getElementsByClassName('all-players-area');
-                const all_players_area = all_players_area_s[all_players_area_s.length-1]; 
-                const span_now = document.getElementById(event.path[3].id); // 出演者削除ボタンのあるspan
+                const all_players_area = all_players_area_s[all_players_area_s.length-1];
+                const span_now_id = event.path[4].id;
+                const span_now = document.getElementById(span_now_id); // 出演者削除ボタンのあるspan
                 const span_now_li = span_now.children[0].getElementsByTagName('li'); // 出演者削除ボタンのspan内のli
-                let span_now_li_number = 1; // 出演者削除ボタンのspan内の調整用liの数
+                let span_now_li_count = 1; // 出演者削除ボタンのspan内の調整用liの数
                 let span_now_li_start = 0; // 何番目のliから消すか
                 
                 for(i=span_now_li.length-1; i > 0; i--){
                     if(span_now_li[i].innerHTML === '' && span_now_li[i].parentElement.tagName === 'UL'){ // タグ名を取得すると大文字
-                        span_now_li_number++;
+                        span_now_li_count++;
                     }else{
                         span_now_li_start = i;
                         break;
                     }
                 }
 
-                const span_now_id_number = Number(event.path[3].id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号                
+                const span_now_id_number = Number(span_now_id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号                
 
                 if(all_players_area.childElementCount == 1){
                     // 出演者削除ボタンが2行目
                     all_players_area.parentElement.removeChild(event.path[1]);
-                    moveElement_back(event.path[1], span_now.id, 1, 1, 16, 0);
-                    all_players_area.parentElement.removeChild(all_players_area);
+                    moveElement_back(event.path[1], span_now.id, 1, 1, 16, 2);
+                    all_players_area.parentElement.parentElement.removeChild(all_players_area.parentElement);
                 }else{
                     // 出演者削除ボタンが3行目以降
                     const remove_element = all_players_area.children[all_players_area.children.length-1]; // 削除したいフォームはall-players-areaクラスセットの最後のセットの最後のフォームセット
@@ -1051,29 +1062,29 @@
                 const span_next_id_number = span_now_id_number + 1;
                 const span_next = document.getElementById('page_' + span_next_id_number); // 出演者削除ボタンのあるspanの次のspan
                 const span_next_ul_first_childern = span_next.children[0].children[0]; // 出演者削除のあるspanの次のspanの最初のフォーム
-                let want_move_element_li_number; // ページを移動させるかもしれない要素のliの数
+                let want_move_element_li_count; // ページを移動させるかもしれない要素のliの数
                 let want_move_element; // ページを移動させるかもしれない要素
                 let where_flag = 0; // 移動させたときにどこにつけるか（0=spanに直接、1=add-set-all-areaクラスに）
                 if(span_next_ul_first_childern.className == 'add-set-all-area'){
                     const span_next_ul_first_childern_firstdiv = span_next_ul_first_childern.children[1];
                     if(span_next_ul_first_childern_firstdiv.childElementCount == 1){
                         // add-set-all-areaクラス内のフォームセットが1つだけ
-                        want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length; 
+                        want_move_element_li_count = span_next_ul_first_childern.getElementsByTagName('li').length; 
                         want_move_element = span_next_ul_first_childern;
                     }else{
                         // add-set-all-areaクラス内のフォームセットが複数の場合は最初のフォームセットだけ
-                        want_move_element_li_number = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
+                        want_move_element_li_count = span_next_ul_first_childern_firstdiv[0].getElementsByTagName('li').length;
                         want_move_element = span_next_ul_first_childern_firstdiv;
                         where_flag = 1;
                     }
                 }else{
                     // 次のspanの最初のフォームセットのクラスがadd-set-areaクラスの場合
-                    want_move_element_li_number = span_next_ul_first_childern.getElementsByTagName('li').length;
+                    want_move_element_li_count = span_next_ul_first_childern.getElementsByTagName('li').length;
                     want_move_element = span_next_ul_first_childern;
                 }
-                if(span_now_li_number >= want_move_element_li_number){
-                    moveElement_back(want_move_element, span_next.id, want_move_element_li_number, span_now_li_start, want_move_element_li_number-1, where_flag);                                       
-                }else if(span_now_id_number == 2 || all_players_area.childElementCount != 1){
+                if(span_now_li_count >= want_move_element_li_count){
+                    moveElement_back(want_move_element, span_next.id, want_move_element_li_count, span_now_li_start, want_move_element_li_count-1, where_flag);                                       
+                }else if(span_now_id_number === 2 || all_players_area.childElementCount !== 1){
                     // 移動させない時は調整用liを追加（page=2またはpage=3以降で入力フォームが1つのとき以外）
                     const li = document.createElement('li');
                     span_now.children[0].appendChild(li);
@@ -1098,7 +1109,6 @@
                 // 要素をコピーする
                 let copied = all_impressions_player_area.firstElementChild.cloneNode(true);
                 copied.id = 'impression_player_area_' + current_impression_player_number; // コピーした要素のidを変更
-                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
                 
                 // 出演者のidを変更する
                 const new_player_impression_id = 'player_impression_' + current_impression_player_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
@@ -1111,7 +1121,6 @@
                 // 関数checkPlayerを動作させる
                 select_players.push(document.querySelector('#'+ new_player_impression_id));
 
-                // 編集
                 if(event.path[1] === last_li[last_li.length-1] || event.path[1] === last_li[last_li.length-2] || event.path[1] === last_li[last_li.length-3]){
                     element_count = 4;
                     const new_add_set_all_area = document.createElement('div');
@@ -1187,7 +1196,7 @@
   
                                         const li = document.createElement('li');
                                         ul.appendChild(li);
-                                        moveElement_forth(new_add_set_all_area, event.path[4].id, element_count, 0); // 0はulのの子要素として
+                                        moveElement_forth(new_add_set_all_area, span.id, element_count, 0); // 0はulのの子要素として
                                     }else{
                                         // 次のページにボタンがある場合
                                         moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], span.id, element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
@@ -1195,8 +1204,7 @@
                                 }
                             }
                         }
-                    }
-                    
+                    }                    
                 }
             }else{
                 alert('出演者の数より多い感想は入力できません。');
@@ -1220,13 +1228,16 @@
             if(current_impression_scene_number < 49){
                 const all_impressions_scene_area_s = document.getElementsByClassName('all-impressions-scene-area');
                 const all_impressions_scene_area = all_impressions_scene_area_s[all_impressions_scene_area_s.length-1]; // 最後のall_impressions_scene_areaクラス
+                const span = event.path[4];
+                const ul = span.children[0];
+                let last_li = span.getElementsByTagName('li'); // 出演者に対する感想追加ボタンのspan内のli
+                
                 current_impression_scene_number++; // id
                 const formerNumber = current_impression_scene_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
                 let copied = all_impressions_scene_area.firstElementChild.cloneNode(true);
                 copied.id = 'impression_scene_area_' + current_impression_scene_number; // コピーした要素のidを変更
-                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-                all_impressions_scene_area.appendChild(copied);
+
                 // 好きな場面のnameを取得する     
                 var copied_scene_impression_names = document.getElementsByName('scene_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
                 // 好きな場面のidを変更する
@@ -1239,6 +1250,97 @@
                 const new_impression_scene_id = 'impression_scene_' + current_impression_scene_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
                 copied_impression_scene_names[(copied_impression_scene_names.length)-1].id = new_impression_scene_id; // 出演者のidを変更
                 copied_impression_scene_names[(copied_impression_scene_names.length)-1].value = '';
+
+                if(event.path[1] === last_li[last_li.length-1] || event.path[1] === last_li[last_li.length-2] || event.path[1] === last_li[last_li.length-3]){
+                    element_count = 4;
+                    if(document.getElementsByName('impression_final')[0].parentElement.parentElement.parentElement === ul){
+                        // 最後にがある場合は最後にも移動させる
+                        moveElement_forth(document.getElementsByName('impression_final')[0].parentElement.parentElement, span.id, 2, 0) // 0はulの最初の子要素として追加
+                    }
+
+                    const new_add_set_all_area = document.createElement('div');
+                    new_add_set_all_area.className = 'add-set-all-area';
+                    const new_all_impressions_scene_area = document.createElement('div');
+                    new_all_impressions_scene_area.className = 'all-impressions-scene-area';
+
+                    new_all_impressions_scene_area.appendChild(copied);
+                    new_add_set_all_area.appendChild(new_all_impressions_scene_area);
+                    new_add_set_all_area.appendChild(event.path[1]);
+
+                    while(last_li.length < 16){
+                        const li = document.createElement('li');
+                        ul.appendChild(li);
+                    }
+ 
+                    moveElement_forth(new_add_set_all_area, span.id, element_count, 0); //0はulの最初の子要素として追加
+                }else{
+                    // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                    all_impressions_scene_area.appendChild(copied);
+
+                    while(last_li.length > 16){
+                        if(last_li[last_li.length-1].parentElement === ul){
+                            // 出演者感想追加ボタンのあるspan内の最後のliが調整用liの場合
+                            last_li[last_li.length-1].remove(); // 出演者感想追加ボタンのあるspan内の最後のliを削除
+                        }else{
+                            // 出演者感想追加ボタンのあるspan内の最後のidが調整用li出ない場合
+                            const add_set_area = span.getElementsByClassName('add-set-area') // 出演者感想追加ボタンのspan内のadd-set-areaクラス
+                            let element_count;
+ 
+                            if(add_set_area[add_set_area.length-1].parentElement.tagName === 'UL'){
+                                // あらすじ、全体について、最後に、確認ボタン                        
+                                const add_set_area_li = add_set_area[add_set_area.length-1].getElementsByTagName('li');
+                                element_count = add_set_area_li.length;
+                                for(let i=1; i<element_count; i++){
+                                    const li = document.createElement('li');
+                                    ul.appendChild(li);
+                                }
+                                moveElement_forth(add_set_area[add_set_area.length-1], span.id, element_count, 0); // 0はulの最初の子要素として追加
+                            }else{
+                                // span内の最後の要素が好きな場面、関連のある公演の場合
+                                const add_set_all_area = span.getElementsByClassName('add-set-all-area'); // 出演者感想追加ボタン内のadd-set-all-areaクラス
+                                const add_set_all_area_add_set_area = add_set_all_area[add_set_all_area.length-1].getElementsByClassName('add-set-area'); // 出演者追加ボタン内の最後のadd-set-all-areaクラス内のadd-set-areaクラス
+
+                                if(add_set_all_area_add_set_area.length === 1){
+                                    // 好きな場面、関連のある公演内の入力フォームが1つ                                
+                                    const add_set_all_area_li = add_set_all_area[add_set_all_area.length-1].getElementsByTagName('li');
+                                    element_count = add_set_all_area_li.length;
+                                    for(let i=1; i<element_count; i++){
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                    }
+                                    moveElement_forth(add_set_all_area[add_set_all_area.length-1], span.id, element_count, 0); // 0はulの最初の子要素として
+                                }else{
+                                    const add_set_area_li = add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1].getElementsByTagName('li');
+                                    element_count = add_set_area_li.length;
+                                    for(let i=1; i<element_count; i++){
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                    }
+
+                                    if(add_set_all_area[add_set_all_area.length-1].lastElementChild.tagName === 'LI'){
+                                        // 最後の要素がボタンの場合
+                                        element_count++;
+                                        const new_add_set_all_area = document.createElement('div');
+                                        new_add_set_all_area.className = 'add-set-all-area';
+                                        const new_all_area = document.createElement('div');
+                                        new_all_area.className = add_set_all_area_add_set_area[0].parentElement.className;
+  
+                                        new_all_area.appendChild(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1]);
+                                        new_add_set_all_area.appendChild(new_all_area);
+                                        new_add_set_all_area.appendChild(add_set_all_area[add_set_all_area.length-1].lastElementChild);
+  
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                        moveElement_forth(new_add_set_all_area, span.id, element_count, 0); // 0はulのの子要素として
+                                    }else{
+                                        // 次のページにボタンがある場合
+                                        moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], span.id, element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
+                                    }
+                                }
+                            }
+                        }
+                    }                    
+                }                
             }else{
                 alert('好きな場面の登録は50個までです。');
             }                    
