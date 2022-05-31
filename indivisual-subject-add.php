@@ -1362,19 +1362,110 @@
             if(current_related_performance_number + 1 < all_performances_number){
                 const all_related_performances_area_s = document.getElementsByClassName('all-related-performances-area');
                 const all_related_performances_area = all_related_performances_area_s[all_related_performances_area_s.length-1]; // 最後のall_related_performances_areaクラス
+                const span = event.path[4];
+                const ul = span.children[0];
+                let last_li = span.getElementsByTagName('li'); // 出演者に対する感想追加ボタンのspan内のli
+                
                 current_related_performance_number++; // id
                 const formerNumber = current_related_performance_number - 1; // ひとつ前のフォーム（コピーしたフォーム）のid番号
                 // 要素をコピーする
                 let copied = all_related_performances_area.firstElementChild.cloneNode(true);
                 copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素の子要素のidを変更
-                // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
-                all_related_performances_area.appendChild(copied);
+
                 // 関連のある公演のnameを取得する     
                 var copied_related_performance_names = document.getElementsByName('related_performances[]'); // 一度name属性を取得して、最後の要素のidを書き換える
                 // 関連のある公演のidを変更する
                 const new_related_performance_id = 'related_performances_' + current_related_performance_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
                 copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
                 copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
+
+                // 編集
+                if(event.path[1] === last_li[last_li.length-1]){
+                    element_count = 2;
+
+                    const new_add_set_all_area = document.createElement('div');
+                    new_add_set_all_area.className = 'add-set-all-area';
+                    const new_all_related_performances_area = document.createElement('div');
+                    new_all_related_performances_area.className = 'all-related-performances-area';
+
+                    new_all_related_performances_area.appendChild(copied);
+                    new_add_set_all_area.appendChild(new_all_related_performances_area);
+                    new_add_set_all_area.appendChild(event.path[1]);
+
+                    while(last_li.length < 16){
+                        const li = document.createElement('li');
+                        ul.appendChild(li);
+                    }
+ 
+                    moveElement_forth(new_add_set_all_area, span.id, element_count, 0); //0はulの最初の子要素として追加
+                }else{
+                    // コピーしてフォーム番号を変更した要素を親要素の一番最後の子要素にする
+                    all_related_performances_area.appendChild(copied);
+
+                    while(last_li.length > 16){
+                        if(last_li[last_li.length-1].parentElement === ul){
+                            // 出演者感想追加ボタンのあるspan内の最後のliが調整用liの場合
+                            last_li[last_li.length-1].remove(); // 出演者感想追加ボタンのあるspan内の最後のliを削除
+                        }else{
+                            // 出演者感想追加ボタンのあるspan内の最後のidが調整用li出ない場合
+                            const add_set_area = span.getElementsByClassName('add-set-area') // 出演者感想追加ボタンのspan内のadd-set-areaクラス
+                            let element_count;
+ 
+                            if(add_set_area[add_set_area.length-1].parentElement.tagName === 'UL'){
+                                // あらすじ、全体について、最後に、確認ボタン                        
+                                const add_set_area_li = add_set_area[add_set_area.length-1].getElementsByTagName('li');
+                                element_count = add_set_area_li.length;
+                                for(let i=1; i<element_count; i++){
+                                    const li = document.createElement('li');
+                                    ul.appendChild(li);
+                                }
+                                moveElement_forth(add_set_area[add_set_area.length-1], span.id, element_count, 0); // 0はulの最初の子要素として追加
+                            }else{
+                                // span内の最後の要素が好きな場面、関連のある公演の場合
+                                const add_set_all_area = span.getElementsByClassName('add-set-all-area'); // 出演者感想追加ボタン内のadd-set-all-areaクラス
+                                const add_set_all_area_add_set_area = add_set_all_area[add_set_all_area.length-1].getElementsByClassName('add-set-area'); // 出演者追加ボタン内の最後のadd-set-all-areaクラス内のadd-set-areaクラス
+
+                                if(add_set_all_area_add_set_area.length === 1){
+                                    // 好きな場面、関連のある公演内の入力フォームが1つ                                
+                                    const add_set_all_area_li = add_set_all_area[add_set_all_area.length-1].getElementsByTagName('li');
+                                    element_count = add_set_all_area_li.length;
+                                    for(let i=1; i<element_count; i++){
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                    }
+                                    moveElement_forth(add_set_all_area[add_set_all_area.length-1], span.id, element_count, 0); // 0はulの最初の子要素として
+                                }else{
+                                    const add_set_area_li = add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1].getElementsByTagName('li');
+                                    element_count = add_set_area_li.length;
+                                    for(let i=1; i<element_count; i++){
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                    }
+
+                                    if(add_set_all_area[add_set_all_area.length-1].lastElementChild.tagName === 'LI'){
+                                        // 最後の要素がボタンの場合
+                                        element_count++;
+                                        const new_add_set_all_area = document.createElement('div');
+                                        new_add_set_all_area.className = 'add-set-all-area';
+                                        const new_all_area = document.createElement('div');
+                                        new_all_area.className = add_set_all_area_add_set_area[0].parentElement.className;
+  
+                                        new_all_area.appendChild(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1]);
+                                        new_add_set_all_area.appendChild(new_all_area);
+                                        new_add_set_all_area.appendChild(add_set_all_area[add_set_all_area.length-1].lastElementChild);
+  
+                                        const li = document.createElement('li');
+                                        ul.appendChild(li);
+                                        moveElement_forth(new_add_set_all_area, span.id, element_count, 0); // 0はulのの子要素として
+                                    }else{
+                                        // 次のページにボタンがある場合
+                                        moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], span.id, element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
+                                    }
+                                }
+                            }
+                        }
+                    }                    
+                }
             }else{
                 alert('登録されている舞台以外は選択できません。');
             }                 
