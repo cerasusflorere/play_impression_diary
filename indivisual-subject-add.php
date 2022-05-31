@@ -480,18 +480,21 @@
                         <input type='checkbox' class='add-book-page-area-input'>
                         <span  id='page_2' class='page page-add page-right' style='z-index:100;'>
                             <ul class='note note-add'>
-                                <li>出演者：</li>
-                                <div class='all-players-area'>
-                                    <?php for($i=0; $i<$players_number+1; $i++){ ?>
-                                    <li id='player_area_<?php echo $i; ?>'>
-                                        <input type="text" name="player[]" id="player_<?php echo $i; ?>" onkeyup="checkPlayer()" value="<?php if(!empty($_SESSION['player'][$i]) ){echo h($_SESSION['player'][$i]); }?>">
-                                    </li>           
-                                    <?php } ?>
+                                <div class='add-set-all-area'>
+                                    <li>出演者：</li>
+                                    <div class='all-players-area'>
+                                        <?php for($i=0; $i<$players_number+1; $i++){ ?>
+                                        <li id='player_area_<?php echo $i; ?>' class='add-set-area'>
+                                            <input type="text" name="player[]" id="player_<?php echo $i; ?>" onkeyup="checkPlayer()" value="<?php if(!empty($_SESSION['player'][$i]) ){echo h($_SESSION['player'][$i]); }?>">
+                                        </li>           
+                                        <?php } ?>
+                                    </div>
+                                    <li>
+                                        <input type="button" id="add_player" value='+' onclick="addPlayer()">
+                                        <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
+                                    </li>
                                 </div>
-                                <li>
-                                    <input type="button" id="add_player" value='+' onclick="addPlayer()">
-                                    <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
-                                </li>
+                                
                     			<div class='add-set-area'>
                                     <li class='add-textarea-area'>
                                         あらすじ：<textarea name="scenario" class='add-textarea' value="<?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?>"><?php if( !empty($_SESSION['scenario']) ){ echo h($_SESSION['scenario']); } ?></textarea>
@@ -714,20 +717,21 @@
                 const add_set_all_area_new = ul_new.getElementsByClassName('add-set-all-area');
                 if(element.children[0].children.length === 0 && add_set_all_area_new[0] !== undefined && element.children[1].className === add_set_all_area_new[0].children[0].className){
                     // 移動した要素と合体させる
-                    for(let i=0; i<add_set_all_area_new[0].children[0].children.length; i++){
-                        element.children[1].appendChild(add_set_all_area_new[0].children[0].children[i]);
+                    for(let i=add_set_all_area_new[0].children[0].children.length-1; i>=0; i--){
+                        // 移動させると要素が消える、後ろから移動させないと順番がずれる。
+                        element.children[1].insertBefore(add_set_all_area_new[0].children[0].children[i], element.children[1].children[0].nextSibling);
                     }
-                    element.appendChild(add_set_all_area_new[0].children[add_set_all_area_new[0].children.length-1]);
+                    if(add_set_all_area_new[0].children[add_set_all_area_new[0].children.length-1].tagName === 'LI'){
+                        // 最後の要素がボタンなら動かす
+                        element.appendChild(add_set_all_area_new[0].children[add_set_all_area_new[0].children.length-1]);
+                    }                    
                     add_set_all_area_new[0].remove();
                 }
                 ul_new.insertBefore(element, ul_new.firstChild);
-            }else if(area_number === 1){
+            }else{
                 // add-set-all-areaクラスの最初の子要素として追加
                 const add_set_all_area_new = ul_new.getElementsByClassName('add-set-all-area');
                 add_set_all_area_new[0].children[0].insertBefore(element, add_set_all_area_new[0].children[0].firstChild);
-            }else{
-                // ulの2番目の子要素として追加
-                ul_new.insertBefore(element, ul_new.children[0].nextSibling);
             }
 
             const lis = span_new.getElementsByTagName('li'); // 出演者追加ボタンの次のページのspan内の最後のli
@@ -790,7 +794,6 @@
                                 moveElement_forth(new_add_set_all_area, span_id_new, new_element_count, 0); // 0はulのの子要素として
                             }else{
                                 // 次のページ以降にボタンがある場合
-                                console.log(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1]);
                                 moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], span_id_new, new_element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
                             }
                         }
@@ -801,7 +804,6 @@
 
         // フォーム削除時にページを跨いでフォーム移動
         function moveElement_back(element, span_id_origin, element_count, li_start, li_count, where_flag){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 何行目から削除するか, 削除したいliの数, 要素をどこにつけるか
-            console.log('A');
             const span_id_origin_number = Number(span_id_origin.replace(/[^0-9]/g, ''));
             const span_id_forth_number = span_id_origin_number - 1;
             const span_id_forth = 'page_' + span_id_forth_number; // 前のページのid
@@ -911,7 +913,8 @@
             if(current_player_number < 49){
                 const all_players_area_s = document.getElementsByClassName('all-players-area');
                 const all_players_area = all_players_area_s[all_players_area_s.length-1]; // 最後のall_players_areaクラス
-                const span = document.getElementById(event.path[3].id); // 出演者追加ボタンのあるspan
+                const span_id = event.path[4].id;
+                const span = document.getElementById(span_id); // 出演者追加ボタンのあるspan
                 const ul = span.children[0];
                 const last_li = span.getElementsByTagName('li'); // 出演者追加ボタンのspan内のli
 
@@ -927,12 +930,16 @@
                 copied.children[0].value='';
 
                 if(event.path[1] === last_li[last_li.length-1]){
+                    const new_add_set_all_area = document.createElement('div');
+                    new_add_set_all_area.className = 'add-set-all-area';
                     const new_all_players_area = document.createElement('div');
                     new_all_players_area.className = 'all-players-area';
-                    new_all_players_area.appendChild(copied);
 
-                    moveElement_forth(new_all_players_area, event.path[3].id, 1, 0);
-                    moveElement_forth(event.path[1], event.path[3].id, 1, 2); // 2は2番目の子要素として
+                    new_all_players_area.appendChild(copied);
+                    new_add_set_all_area.appendChild(new_all_players_area);
+                    new_add_set_all_area.appendChild(event.path[1]);
+
+                    moveElement_forth(new_add_set_all_area, span_id, 1, 0);
 
                     const li = document.createElement('li'); // spanの最後に調整用liを作る
                     ul.appendChild(li);
@@ -956,7 +963,7 @@
                                 const li = document.createElement('li');
                                 ul.appendChild(li);
                             }
-                            moveElement_forth(add_set_area[add_set_area.length-1], event.path[3].id, element_count, 0); // 0はulの最初の子要素として追加
+                            moveElement_forth(add_set_area[add_set_area.length-1], span_id, element_count, 0); // 0はulの最初の子要素として追加
                         }else{
                             // span内の最後の要素が出演者への感想や好きな場面、関連のある公演の場合
                             const add_set_all_area = span.getElementsByClassName('add-set-all-area'); // 出演者追加ボタン内のadd-set-all-areaクラス
@@ -970,7 +977,7 @@
                                     const li = document.createElement('li');
                                     ul.appendChild(li);
                                 }
-                                moveElement_forth(add_set_all_area[add_set_all_area.length-1], event.path[3].id, element_count, 0); // 0はulの最初の子要素として
+                                moveElement_forth(add_set_all_area[add_set_all_area.length-1], span_id, element_count, 0); // 0はulの最初の子要素として
                             }else{
                                 // 出演者の感想、好きな場面、関連のある公演内の入力フォームが複数
                                 const add_set_area_li = add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1].getElementsByTagName('li');
@@ -994,10 +1001,10 @@
 
                                     const li = document.createElement('li');
                                     ul.appendChild(li);
-                                    moveElement_forth(new_add_set_all_area, event.path[3].id, element_count, 0); // 0はulのの子要素として
+                                    moveElement_forth(new_add_set_all_area, span_id, element_count, 0); // 0はulのの子要素として
                                 }else{
                                     // 次のページにボタンがある場合
-                                    moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], event.path[3].id, element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
+                                    moveElement_forth(add_set_all_area_add_set_area[add_set_all_area_add_set_area.length-1], span_id, element_count, 1); //1は次のページのadd-set-all-areaクラスの最後の子要素として
                                 }
                             }
                         }
