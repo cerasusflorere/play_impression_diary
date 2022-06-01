@@ -672,13 +672,21 @@
             const span_id_newer_number = span_id_former_number + 1;
             const span_id_new = 'page_' + span_id_newer_number;
             let span_new = document.getElementById(span_id_new);
+            const span_all = document.getElementsByTagName('span');
+            
+            if(span_new === span_all[span_all.length-1]){
+                // ページを動かせるようにする
+                span_new.parentElement.children[0].disabled = false;
+            }
+
             if(span_new == null){
                 if(document.getElementById(span_id_former).className.indexOf('page-right') == -1){
-                    // 次作ページは右側&左側
+                    // 次作ページは右側&左側（左側はページを動かせないようにする）
                     const new_label = document.createElement('label');
                     const new_input = document.createElement('input');
                     new_input.type = 'checkbox';
                     new_input.className = 'add-book-page-area-input';
+                    new_input.disabled = true;
 
                     const new_span_right = document.createElement('span');
                     new_span_right.id = span_id_new;
@@ -1379,7 +1387,6 @@
                 copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
                 copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
 
-                // 編集
                 if(event.path[1] === last_li[last_li.length-1]){
                     element_count = 2;
 
