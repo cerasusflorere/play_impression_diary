@@ -550,11 +550,11 @@
                                         <?php for($i=0; $i<$impression_scenes_number+1; $i++){ ?>
                                             <div id='impression_scene_area_<?php echo $i; ?>' class='add-set-area'>
                                                 <li>
-                                                    場面：<input type='text' name='scene_impression[]' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
+                                                    場面：<input type='text' name='scene_impression[]' id='scene_impression_<?php echo $i; ?>' value='<?php if( !empty($_SESSION['scene_impression'][$i]) ){ echo h($_SESSION['scene_impression'][$i]); } ?>'>
                                                 </li>
                                                 <li>
                                                     <div class='add-textarea-area'>
-                                                        コメント：<textarea name="impression_scene[]" class='add-textarea' value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
+                                                        コメント：<textarea name="impression_scene[]" id='impression_scene_<?php echo $i; ?>' class='add-textarea' value="<?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?>"><?php if( !empty($_SESSION['impression_scene'][$i]) ){ echo h($_SESSION['impression_scene'][$i]); } ?></textarea>
                                                     </div>                                            
                                                 </li>
                                                 <li></li>
@@ -812,8 +812,6 @@
 
         // フォーム削除時にページを跨いでフォーム移動
         function moveElement_back(element, span_id_origin, element_count, where_flag){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 削除したいliの数, 要素をどこにつけるか
-            console.log('A');
-            console.log(element);
             const span_id_origin_number = Number(span_id_origin.replace(/[^0-9]/g, ''));
             const span_id_forth_number = span_id_origin_number - 1;
             const span_id_forth = 'page_' + span_id_forth_number; // 前のページのid
@@ -1166,7 +1164,7 @@
                             // 移動させない時は調整用liを追加
                             const li = document.createElement('li');
                             span_now.children[0].appendChild(li);
-                        }                    
+                        } 
                     }
                 }
             }else{
@@ -1358,18 +1356,14 @@
                 let copied = all_impressions_scene_area.firstElementChild.cloneNode(true);
                 copied.id = 'impression_scene_area_' + current_impression_scene_number; // コピーした要素のidを変更
 
-                // 好きな場面のnameを取得する     
-                var copied_scene_impression_names = document.getElementsByName('scene_impression[]'); // 一度name属性を取得して、最後の要素のidを書き換える
                 // 好きな場面のidを変更する
                 const new_scene_impression_id = 'scene_impression_' + current_impression_scene_number; // 好きな場面のid、文字＋計算はできない
-                copied_scene_impression_names[(copied_scene_impression_names.length)-1].id = new_scene_impression_id; // 好きな場面のidを変更
-                copied_scene_impression_names[(copied_scene_impression_names.length)-1].value = '';
-                // 感想のnameを取得する     
-                var copied_impression_scene_names = document.getElementsByName('impression_scene[]'); // 一度name属性を取得して、最後の要素のidを書き換える
+                copied.children[0].children[0].id = new_scene_impression_id; // 好きな場面のidを変更
+                copied.children[0].children[0].value = '';
                 // 感想のidを変更する
-                const new_impression_scene_id = 'impression_scene_' + current_impression_scene_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-                copied_impression_scene_names[(copied_impression_scene_names.length)-1].id = new_impression_scene_id; // 出演者のidを変更
-                copied_impression_scene_names[(copied_impression_scene_names.length)-1].value = '';
+                const new_impression_scene_id = 'impression_scene_' + current_impression_scene_number; // 新しい好きな場面の感想のid、文字＋計算はできない
+                copied.children[1].children[0].children[0].id = new_impression_scene_id; // 好きな場面の感想のidを変更
+                copied.children[1].children[0].children[0].value = '';
 
                 if(event.path[1] === last_li[last_li.length-1] || event.path[1] === last_li[last_li.length-2] || event.path[1] === last_li[last_li.length-3]){
                     element_count = 4;
@@ -1468,9 +1462,56 @@
         // フォーム削除
         function dispImpression_Scene(){
             if(current_impression_scene_number > 0){
-                const remove_element = all_impressions_scene_area.children[current_impression_scene_number];
-                all_impressions_scene_area.removeChild(remove_element);
                 current_impression_scene_number--;
+                const span_now = event.path[4]; // 好きな場面削除ボタンのあるspan
+                const ul_now = span_now.children[0];
+                const all_impressions_scene_area = span_now.getElementsByClassName('all-impressions-scene-area')[0];
+                const span_now_li = span_now.getElementsByTagName('li'); // 好きな場面削除ボタンのspan内のli
+                let span_now_li_count = 3; // 好きな場面削除ボタンのspan内の調整用liの数
+                
+                for(i=span_now_li.length-1; i >= 0; i--){
+                    if(span_now_li[i].innerHTML === '' && span_now_li[i].parentElement === ul_now){
+                        span_now_li_count++;
+                    }else{
+                        break;
+                    }
+                }
+
+                if(all_impressions_scene_area.getElementsByClassName('add-set-area').length === 1){
+                    // 好きな場面削除ボタンが4行目
+                    moveElement_back(event.path[1], span_now.id, 1, 2);
+
+                    while(span_now_li.length < 16){
+                        // 移動させないので調整用liを追加
+                        const li = document.createElement('li');
+                        span_now.children[0].appendChild(li);
+                    }
+                }else{
+                    // 好きな場面削除ボタンが5行目以降
+                    const remove_element = all_impressions_scene_area.children[all_impressions_scene_area.children.length-1]; // 削除したいフォームはall-impressions-scene-areaクラスセットの最後のセットの最後のフォームセット
+                    all_impressions_scene_area.removeChild(remove_element);
+
+                    const span_now_id_number = Number(span_now.id.replace(/[^0-9]/g, '')); // 好きな場面削除ボタンのあるspanのid番号
+                    const span_next_id_number = span_now_id_number + 1;
+                    const span_next = document.getElementById('page_' + span_next_id_number); // 好きな場面削除ボタンのあるspanの次のspan
+                    next_span_data = Array(3).fill(100);
+                
+                    if(span_next !== null){
+                        // 好きな場面以降は最終ページの可能性がある
+                        next_span_data = findMoveElement(span_next); // 要素、要素の行数、付け方
+                    }
+                    
+
+                    if(span_now_li_count >= next_span_data[1]){
+                        moveElement_back(next_span_data[0], span_next.id, next_span_data[1], next_span_data[2]);                                       
+                    }else{
+                        while(span_now_li.length < 16){
+                            // 移動させない時は調整用liを追加
+                            const li = document.createElement('li');
+                            span_now.children[0].appendChild(li);
+                        }                    
+                    }
+                }
             }else{
                 alert('フォームが1つの場合には削除できません。');
             }
@@ -1492,12 +1533,10 @@
                 let copied = all_related_performances_area.firstElementChild.cloneNode(true);
                 copied.id = 'related_performance_area_' + current_related_performance_number; // コピーした要素の子要素のidを変更
 
-                // 関連のある公演のnameを取得する     
-                var copied_related_performance_names = document.getElementsByName('related_performances[]'); // 一度name属性を取得して、最後の要素のidを書き換える
                 // 関連のある公演のidを変更する
                 const new_related_performance_id = 'related_performances_' + current_related_performance_number; // 新しい出演に対する感想の出演者のid、文字＋計算はできない
-                copied_related_performance_names[(copied_related_performance_names.length)-1].id = new_related_performance_id; // 出演者のidを変更
-                copied_related_performance_names[(copied_related_performance_names.length)-1].value = '';
+                copied.children[0].id = new_related_performance_id; // 出演者のidを変更
+                copied.children[0].value = '';
 
                 if(event.path[1] === last_li[last_li.length-1]){
                     element_count = 2;
@@ -1592,9 +1631,41 @@
         // フォーム削除
         function dispRelated_Performance(){
             if(current_related_performance_number > 0){
-                const remove_element = all_related_performances_area.children[current_related_performance_number];
-                all_related_performances_area.removeChild(remove_element);
                 current_related_performance_number--;
+                const span_now = event.path[4]; // 関連のある公演削除ボタンのあるspan
+                const ul_now = span_now.children[0];
+                const all_related_performances_area = span_now.getElementsByClassName('all-related-performances-area')[0];
+                const span_now_li = span_now.getElementsByTagName('li'); // 関連のある公演削除ボタンのspan内のli
+                let span_now_li_count = 3; // 関連のある公演削除ボタンのspan内の調整用liの数
+                
+                for(i=span_now_li.length-1; i >= 0; i--){
+                    if(span_now_li[i].innerHTML === '' && span_now_li[i].parentElement === ul_now){
+                        span_now_li_count++;
+                    }else{
+                        break;
+                    }
+                }
+
+                if(all_related_performances_area.getElementsByClassName('add-set-area').length === 1){
+                    // 出演者削除ボタンが2行目
+                    moveElement_back(event.path[1], span_now.id, 1, 2);
+
+                    while(span_now_li.length < 16){
+                        // 移動させないので調整用liを追加
+                        const li = document.createElement('li');
+                        span_now.children[0].appendChild(li);
+                    }
+                }else{
+                    // 出演者削除ボタンが3行目以降
+                    const remove_element = all_related_performances_area.children[all_related_performances_area.children.length-1]; // 削除したいフォームはall-related_performances-areaクラスセットの最後のセットの最後のフォームセット
+                    all_related_performances_area.removeChild(remove_element);
+
+                    while(span_now_li.length < 16){
+                        // 移動させない時は調整用liを追加
+                        const li = document.createElement('li');
+                        span_now.children[0].appendChild(li);
+                    }
+                }
             }else{
                 alert('フォームが1つの場合には削除できません。');
             }
