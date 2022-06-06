@@ -489,7 +489,7 @@
                                         </li>           
                                         <?php } ?>
                                     </div>
-                                    <li>
+                                    <li id='player_btn'>
                                         <input type="button" id="add_player" value='+' onclick="addPlayer()">
                                         <input type="button" id="disp_player" value='-' onclick="dispPlayer()">
                                     </li>
@@ -530,7 +530,7 @@
                                         </div>
                                         <?php } ?>
                                     </div>
-                                    <li>
+                                    <li id='impression_player_btn'>
                                         <input type="button" id="add_impression_player" value='+' onclick="addImpression_Player()">
                                         <input type="button" id="disp_impression_player" value='-' onclick="dispImpression_Player()">
                                     </li>
@@ -561,7 +561,7 @@
                                             </div>
                                         <?php } ?>                                        
                                         </div>
-                                    <li>
+                                    <li id='impression_scene_btn'>
                                         <input type="button" id="add_impression_scene" type="button" value='+' onclick="addImpression_Scene()">
                                         <input type="button" id="disp_impression_scene" value='-' onclick="dispImpression_Scene()">
                                     </li>
@@ -588,7 +588,7 @@
                                             </li>                
                                             <?php } ?>                
                                         </div>
-                                    <li>
+                                    <li id='related_performance_btn'>
                                         <input type="button" id="add_related_performance" value="+" onclick="addRelated_Performance()">
                                         <input type="button" id="disp_related_performance" value="-" onclick="dispRelated_Performance()"><br>
                                     </li>
@@ -812,6 +812,8 @@
 
         // フォーム削除時にページを跨いでフォーム移動
         function moveElement_back(element, span_id_origin, element_count, where_flag){ // 移動させたい要素, 元々あったspanのid, 移動させたい要素の行数, 削除したいliの数, 要素をどこにつけるか
+            console.log('A');
+            console.log(element);
             const span_id_origin_number = Number(span_id_origin.replace(/[^0-9]/g, ''));
             const span_id_forth_number = span_id_origin_number - 1;
             const span_id_forth = 'page_' + span_id_forth_number; // 前のページのid
@@ -848,7 +850,19 @@
                 span_forth_add_set_all_area[span_forth_add_set_all_area.length-1].lastElementChild.appendChild(element);
             }else if(where_flag === 2){
                 // ボタンだけ付ける
-                span_forth_add_set_all_area[span_forth_add_set_all_area.length-1].appendChild(element);                
+                span_forth_add_set_all_area[span_forth_add_set_all_area.length-1].appendChild(element);
+
+                // 元々のページのフォームエリアを削除
+                if(element.id === 'player_btn' || span_origin_ul.children[0].getElementsByClassName('all-players-area').length === 1){
+                    span_origin_ul.removeChild(span_origin_ul.getElementsByClassName('add-set-all-area')[0]);
+                }
+                else if(element.id === 'impression_player_btn' || span_origin_ul.children[0].getElementsByClassName('all-impressions-player-area').length === 1){
+                    span_origin_ul.removeChild(span_origin_ul.getElementsByClassName('add-set-all-area')[0]);
+                }else if(element.id === 'impression_scene_btn' || span_origin_ul.children[0].getElementsByClassName('all-impressions-scene-area').length === 1){
+                    span_origin_ul.removeChild(span_origin_ul.getElementsByClassName('add-set-all-area')[0]);
+                }else if(element.id === 'related_performance_btn' || span_origin_ul.children[0].getElementsByClassName('all-related-performances-area').length === 1){
+                    span_origin_ul.removeChild(span_origin_ul.getElementsByClassName('add-set-all-area')[0]);
+                }
             }else{
                 // 分割する
                 const new_add_set_area = element.getElementsByClassName('add-set-area');
@@ -880,7 +894,13 @@
                         // 次のページがある
                         let span_origin_li_count = 16-span_origin_li.length; // 足りないliの数
                         if(where_flag === 2){
-                            span_origin_li_count++;
+                            if(element.id === 'player_btn' || element.id === 'related_performance_btn'){
+                                // 出演者、関連のある公演
+                                span_origin_li_count++;
+                            }else{
+                                // 出演者の感想、好きな場面
+                                span_origin_li_count = span_origin_li_count+3;
+                            }                            
                         }
                         for(let i=span_origin_li.length-1; i>=0; i--){
                             if(span_origin_li[i].innerHTML === '' && span_origin_li[i].parentElement === span_origin_ul){
@@ -904,7 +924,7 @@
                     }else if(span_next !== null){
                         // 次のページでフォームがない
                         if(span_next.classList.contains('page-right')){
-                            // 次のページが右ページの場合、labelごと消す
+                            // 次のページが右ページの場合、labelごと消す                            
                             span_next.parentElement.parentElement.removeChild(span_next.parentElement);
                             while(span_origin_li.length < 16){
                                 const li = document.createElement('li');
@@ -1122,7 +1142,6 @@
                 if(all_players_area.getElementsByClassName('add-set-area').length === 1){
                     // 出演者削除ボタンが2行目
                     moveElement_back(event.path[1], span_now.id, 1, 2);
-                    ul_now.removeChild(all_players_area.parentElement);
 
                     while(span_now_li.length < 16){
                         // 移動させないので調整用liを追加
@@ -1149,7 +1168,7 @@
                             span_now.children[0].appendChild(li);
                         }                    
                     }
-                }                
+                }
             }else{
                 alert('フォームが1つの場合には削除できません。');
             }
@@ -1274,9 +1293,51 @@
         // フォーム削除
         function dispImpression_Player(){
             if(current_impression_player_number > 0){
-                const remove_element = all_impressions_player_area.children[current_impression_player_number];
-                all_impressions_player_area.removeChild(remove_element);
                 current_impression_player_number--;
+                const span_now = event.path[4]; // 出演者削除ボタンのあるspan
+                const ul_now = span_now.children[0];
+                const all_impressions_player_area = span_now.getElementsByClassName('all-impressions-player-area')[0];
+                const span_now_li = span_now.getElementsByTagName('li'); // 出演者の感想削除ボタンのspan内のli
+                let span_now_li_count = 3; // 出演者の感想削除ボタンのspan内の調整用liの数
+                
+                for(i=span_now_li.length-1; i >= 0; i--){
+                    if(span_now_li[i].innerHTML === '' && span_now_li[i].parentElement === ul_now){
+                        span_now_li_count++;
+                    }else{
+                        break;
+                    }
+                }
+
+                if(all_impressions_player_area.getElementsByClassName('add-set-area').length === 1){
+                    // 出演者の感想削除ボタンが4行目
+                    moveElement_back(event.path[1], span_now.id, 1, 2);
+
+                    while(span_now_li.length < 16){
+                        // 移動させないので調整用liを追加
+                        const li = document.createElement('li');
+                        span_now.children[0].appendChild(li);
+                    }
+                }else{
+                    // 出演者の感想削除ボタンが5行目以降
+                    const remove_element = all_impressions_player_area.children[all_impressions_player_area.children.length-1]; // 削除したいフォームはall-impressions-player-areaクラスセットの最後のセットの最後のフォームセット
+                    all_impressions_player_area.removeChild(remove_element);
+
+                    const span_now_id_number = Number(span_now.id.replace(/[^0-9]/g, '')); // 出演者削除ボタンのあるspanのid番号
+                    const span_next_id_number = span_now_id_number + 1;
+                    const span_next = document.getElementById('page_' + span_next_id_number); // 出演者削除ボタンのあるspanの次のspan
+                
+                    const next_span_data = findMoveElement(span_next); // 要素、要素の行数、付け方
+
+                    if(span_now_li_count >= next_span_data[1]){
+                        moveElement_back(next_span_data[0], span_next.id, next_span_data[1], next_span_data[2]);                                       
+                    }else{
+                        while(span_now_li.length < 16){
+                            // 移動させない時は調整用liを追加
+                            const li = document.createElement('li');
+                            span_now.children[0].appendChild(li);
+                        }                    
+                    }
+                }
             }else{
                 alert('フォームが1つの場合には削除できません。');
             }
